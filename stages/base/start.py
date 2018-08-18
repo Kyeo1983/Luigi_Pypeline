@@ -2,7 +2,7 @@ class stage_start(luigi.Task):
     def run(self):
         ctx['sysStatus'] = 'running'
         
-        foldername = str(ctx['sysFolder']) + './run'
+        foldername = str(ctx['sysFolder']) + '/run'
         if not os.path.exists(foldername):
             os.makedirs(os.path.join(foldername))
            

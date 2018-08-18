@@ -27,7 +27,7 @@ input_steps = input_file['sequence']
 
 datefile = datetime.now().strftime('%Y%m%d_%H-%M-%S')
 outputfile = JOB_PATH / '{}.py'.format(input_name)
-outputbatfile = JOB_PATH / '{}.bat'.format(input_name)
+outputbatfile = JOB_PATH / '{}.sh'.format(input_name)
 
 
 def render(tpl_path, context):
