@@ -74,6 +74,14 @@ for step in input_steps:
     list_job_id.append(step['id'])
     list_parent_id.append(step['parent'])
 
+
+list_leaf_stagenames = list(map(lambda leaf_node: "stage_{}()".format(str(leaf_node)), [x for x in list_job_id if x not in list_parent_id]))
+end_stg = { 'stage': 'end', 'parent': ','.join(list_leaf_stagenames) }
+
+ren = render(BASE_STAGE_PATH / 'end.py', end_stg)
+rendered.append('{}\n'.format(ren))
+    
+    
 # looping through import list and write import lines
 for imports in to_import:
     importconf = importsconfig[imports]
