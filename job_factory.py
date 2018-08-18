@@ -78,7 +78,11 @@ for step in input_steps:
 list_leaf_stagenames = list(map(lambda leaf_node: "stage_{}()".format(str(leaf_node)), [x for x in list_job_id if x not in list_parent_id]))
 end_stg = { 'stage': 'end', 'parent': ','.join(list_leaf_stagenames) }
 
-ren = render(BASE_STAGE_PATH / 'end.py', end_stg)
+if os.name == 'nt':
+    # on windows
+    ren = render(str(BASE_STAGE_PATH / 'end.py'), end_stg)
+else:
+    ren = render(BASE_STAGE_PATH / 'end.py', end_stg)
 rendered.append('{}\n'.format(ren))
     
     
@@ -95,7 +99,13 @@ for imports in to_import:
         importstr = '{} as {}'.format(importstr, importconf['alias'])        
     output.write('{}\n'.format(importstr))
     
-sysFolder = '{}/{}'.format(JOB_MARKER_PATH, input_name)
+
+sysFolder = JOB_MARKER_PATH / input_name
+if os.name == 'nt':
+    # on windows
+    sysFolder = str(sysFolder)
+else:
+    sysFolder = sysFolder.resolve()
 output.write("ctx = {{'sysFolder' : '{}'}}\n".format(sysFolder))
 
 
