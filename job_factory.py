@@ -26,16 +26,16 @@ input_steps = input_file['sequence']
 
 
 datefile = datetime.now().strftime('%Y%m%d_%H-%M-%S')
-outputfile = '{}/{}.py'.format(JOB_PATH, input_name)
-outputbatfile = '{}/{}.bat'.format(JOB_PATH, input_name)
+outputfile = JOB_PATH / '{}.py'.format(input_name)
+outputbatfile = JOB_PATH / '{}.bat'.format(input_name)
 
 
 def render(tpl_path, context):
     path, filename = os.path.split(tpl_path)
     return Environment(loader=FileSystemLoader(path or './')).get_template(filename).render(context)
 
-output = open(outputfile, 'w+')
-outputbat = open(outputbatfile, 'w+')
+output = open(outputfile, 'w')
+outputbat = open(outputbatfile, 'w')
 
 
 to_import = []
