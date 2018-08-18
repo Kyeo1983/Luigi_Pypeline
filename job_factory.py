@@ -44,7 +44,11 @@ list_job_id = []
 list_parent_id = []
 
 
-rendered.append(open(str(BASE_STAGE_PATH / 'start.py'), "r").read())
+if os.name == 'nt':
+    # on windows
+    rendered.append(open(str(BASE_STAGE_PATH / 'start.py'), "r").read())
+else:
+    rendered.append(open((BASE_STAGE_PATH / 'start.py').resolve(), "r").read())
 
 
 for step in input_steps:
@@ -63,7 +67,11 @@ for step in input_steps:
     list_parent_id.append(step['parent'])
     
     
-rendered.append(open(str(BASE_STAGE_PATH / 'imports.py'), "r").read())
+if os.name == 'nt':
+    # on windows
+    rendered.append(open(str(BASE_STAGE_PATH / 'imports.py'), "r").read())
+else:
+    rendered.append(open((BASE_STAGE_PATH / 'imports.py').resolve(), "r").read())
 
 
 # looping through import list and write import lines
