@@ -12,8 +12,8 @@ sys.path.append('../utilities')
 
 
 BASE_PATH = Path('.')
-JOB_MARKER_PATH = BASE_PATH / 'jobmarkers'
 JOB_PATH = BASE_PATH / 'jobs'
+JOB_MARKER_PATH = JOB_PATH / 'jobmarkers'
 STAGE_PATH = BASE_PATH / 'stages'
 BASE_STAGE_PATH = STAGE_PATH / 'base'
 from utilities.configs.importsconf import conf as importsconfig
