@@ -39,10 +39,12 @@ if os.name == 'nt':
     # on windows
     output = open(str(outputfile), 'w')
     outputbat = open(str(outputbatfile), 'w')
+    output.write(open(str(BASE_STAGE_PATH / 'imports.py'), "r").readlines())
 else:
     output = open(outputfile.resolve(), 'w')
     outputbat = open(outputbatfile.resolve(), 'w')
-
+    output.write(open((BASE_STAGE_PATH / 'imports.py').resolve(), "r").readlines())
+    
 
 to_import = []
 rendered = []
@@ -71,14 +73,6 @@ for step in input_steps:
     # adding the ending
     list_job_id.append(step['id'])
     list_parent_id.append(step['parent'])
-    
-    
-if os.name == 'nt':
-    # on windows
-    rendered.append(open(str(BASE_STAGE_PATH / 'imports.py'), "r").read())
-else:
-    rendered.append(open((BASE_STAGE_PATH / 'imports.py').resolve(), "r").read())
-
 
 # looping through import list and write import lines
 for imports in to_import:
