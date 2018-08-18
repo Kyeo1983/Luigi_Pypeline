@@ -34,8 +34,14 @@ def render(tpl_path, context):
     path, filename = os.path.split(tpl_path)
     return Environment(loader=FileSystemLoader(path or './')).get_template(filename).render(context)
 
-output = open(outputfile, 'w')
-outputbat = open(outputbatfile, 'w')
+
+if os.name == 'nt':
+    # on windows
+    output = open(str(outputfile), 'w')
+    outputbat = open(str(outputbatfile), 'w')
+else:
+    output = open(outputfile.resolve(), 'w')
+    outputbat = open(outputbatfile.resolve(), 'w')
 
 
 to_import = []
