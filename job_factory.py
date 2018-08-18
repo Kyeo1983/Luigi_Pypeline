@@ -39,11 +39,11 @@ if os.name == 'nt':
     # on windows
     output = open(str(outputfile), 'w')
     outputbat = open(str(outputbatfile), 'w')
-    output.write(open(str(BASE_STAGE_PATH / 'imports.py'), "r").readlines())
+    output.write("".join(open(str(BASE_STAGE_PATH / 'imports.py'), "r").readlines()) + "\n")
 else:
     output = open(outputfile.resolve(), 'w')
     outputbat = open(outputbatfile.resolve(), 'w')
-    output.write(open((BASE_STAGE_PATH / 'imports.py').resolve(), "r").readlines())
+    output.write("".join(open((BASE_STAGE_PATH / 'imports.py').resolve(), "r").readlines()) + "\n")
     
 
 to_import = []
