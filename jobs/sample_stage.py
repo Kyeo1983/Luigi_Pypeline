@@ -4,10 +4,12 @@ import os
 import sys
 import time
 import shutil
+import subprocess
 from datetime import datetime
 sys.path.append('../../utilities')
+
 import pandas as pd
-ctx = {'sysFolder' : 'jobs\jobmarkers\sample_stage'}
+ctx = {'sysFolder' : '/home/kyeo/pypeline/jobs/jobmarkers/sample_stage'}
 class stage_start(luigi.Task):
     def run(self):
         ctx['sysStatus'] = 'running'
@@ -36,6 +38,12 @@ class stage_1(luigi.Task):
     def output(self):
         return luigi.LocalTarget(str(ctx['sysFolder']) + '/run/1.mrk')
 
+class email(luigi.Config):
+    sender = luigi.Parameter(default="luigi-noreply@pypeline.com")
+    sendername = luigi.Parameter(default="Luigi")
+    receiver = luigi.Parameter()
+
+
 class stage_end(luigi.Task):
     def requires(self):
         return[stage_1()]
@@ -44,4 +52,7 @@ class stage_end(luigi.Task):
         foldername = str(ctx['sysFolder'])
         if os.path.exists(foldername):
             shutil.move(os.path.join(foldername + '/run'), os.path.join(foldername + '/run_' + datetime.now().strftime('%Y%m%d%H%M%S')))
+        
+        emailconf = email()
+        subprocess.run('echo "Success" | mail -s "Success" {} -aFrom:{}\<{}\>'.format(emailconf.receiver, emailconf.sendername, emailconf.sender), shell=True)
 
