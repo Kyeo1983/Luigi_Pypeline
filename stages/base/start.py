@@ -1,4 +1,4 @@
-class stage_start(luigi.Task):
+class {{job}}_start(luigi.Task):
     def run(self):
         ctx['sysStatus'] = 'running'
         
