@@ -1,7 +1,8 @@
+# Config classes should be camel cased
 class email(luigi.Config):
     sender = luigi.Parameter(default="luigi-noreply@pypeline.com")
-    sendername = luigi.Parameter(default="Luigi")
-    receiver = luigi.Parameter()
+    sendername = luigi.Parameter(default="Mario")
+    receiver = luigi.Parameter('kyeo_ses@yahoo.com')
 
 
 class stage_end(luigi.Task):
@@ -14,4 +15,4 @@ class stage_end(luigi.Task):
             shutil.move(os.path.join(foldername + '/run'), os.path.join(foldername + '/run_' + datetime.now().strftime('%Y%m%d%H%M%S')))
         
         emailconf = email()
-        subprocess.run('echo "Success" | mail -s "Success" {} -aFrom:{}\<{}\>'.format(emailconf.receiver, emailconf.sendername, emailconf.sender), shell=True)
+        subprocess.run('echo "Success" | mail -s "Job Success: {}" {} -aFrom:{}\<{}\>'.format(ctx['sysJobName'], emailconf.receiver, emailconf.sendername, emailconf.sender), shell=True)

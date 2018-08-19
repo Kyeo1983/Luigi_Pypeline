@@ -100,6 +100,7 @@ for imports in to_import:
     output.write('{}\n'.format(importstr))
     
 
+# Writing Folder to Script
 sysFolder = JOB_MARKER_PATH / input_name
 if os.name == 'nt':
     # on windows
@@ -107,6 +108,10 @@ if os.name == 'nt':
 else:
     sysFolder = sysFolder.resolve()
 output.write("ctx = {{'sysFolder' : '{}'}}\n".format(sysFolder))
+
+# Writing Job Name to Script
+output.write("ctx['sysJobName'] = '{}'\n".format(input_name))
+
 
 
 for item in rendered:

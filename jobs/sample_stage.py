@@ -10,6 +10,7 @@ sys.path.append('../../utilities')
 
 import pandas as pd
 ctx = {'sysFolder' : '/home/kyeo/pypeline/jobs/jobmarkers/sample_stage'}
+ctx['sysJobName'] = 'sample_stage'
 class stage_start(luigi.Task):
     def run(self):
         ctx['sysStatus'] = 'running'
@@ -38,10 +39,11 @@ class stage_1(luigi.Task):
     def output(self):
         return luigi.LocalTarget(str(ctx['sysFolder']) + '/run/1.mrk')
 
+# Config classes should be camel cased
 class email(luigi.Config):
     sender = luigi.Parameter(default="luigi-noreply@pypeline.com")
-    sendername = luigi.Parameter(default="Luigi")
-    receiver = luigi.Parameter()
+    sendername = luigi.Parameter(default="Mario")
+    receiver = luigi.Parameter('kyeo_ses@yahoo.com')
 
 
 class stage_end(luigi.Task):
@@ -54,5 +56,6 @@ class stage_end(luigi.Task):
             shutil.move(os.path.join(foldername + '/run'), os.path.join(foldername + '/run_' + datetime.now().strftime('%Y%m%d%H%M%S')))
         
         emailconf = email()
-        subprocess.run('echo "Success" | mail -s "Success" {} -aFrom:{}\<{}\>'.format(emailconf.receiver, emailconf.sendername, emailconf.sender), shell=True)
+        print('echo "Success" | mail -s "Job Success: {}" {} -aFrom:{}\<{}\>'.format(ctx['sysJobName'], emailconf.receiver, emailconf.sendername, emailconf.sender))
+        subprocess.run('echo "Success" | mail -s "Job Success: {}" {} -aFrom:{}\<{}\>'.format(ctx['sysJobName'], emailconf.receiver, emailconf.sendername, emailconf.sender), shell=True)
 
