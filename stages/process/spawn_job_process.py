@@ -12,7 +12,7 @@ class {{job}}_{{id}}(luigi.Task):
 
 
         def scanJobTable():
-            dbcol = { 'JOBID':0, 'JOBNAME':1, 'UNLOADED':2, 'LOAD_DAY':3, 'LOAD_TIME':4, 'UNLOAD_TIME':5, 'FREQ':6, 'NEXT_RUN_TIME':7 }
+            dbcol = { JOBID:0, JOBNAME:1, UNLOADED:2, LOAD_DAY:3, LOAD_TIME:4, UNLOAD_TIME:5, FREQ:6, NEXT_RUN_TIME:7 }
 
             df = pd.read_csv('../temp/jobtable.csv')
             now = datetime.now()
