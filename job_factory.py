@@ -103,7 +103,7 @@ for item in rendered:
     
     
 # prep bat file
-outputbat.write('#!/bin/sh')
+outputbat.write('#!/bin/sh\n')
 outputbat.write('python -m luigi --module {} {}_end\n'.format(job_name, job_name))
 outputbat.close()
 output.close()
