@@ -5,7 +5,7 @@ class {{job}}_{{id}}(luigi.Task):
         return {{job}}_{{parent}}()
     
     def run(self):
-        proc = Popen(['{{param_jobname}}'])
+        proc = Popen(['./{{param_jobname}}'])
         with open(self.output().path, 'w') as out:
             out.write(str('running'))
 
