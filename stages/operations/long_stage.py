@@ -3,9 +3,10 @@ class {{job}}_{{id}}(luigi.Task):
         return {{job}}_{{parent}}()
     
     def run(self):
-        r = subprocess.call('sleep 30 || ls /home/eeee', shell=True)
+        proc = subprocess.run('sleep 30 && cp kkkkk', shell=True)
+        proc.check_returncode()
         with open(self.output().path, 'w') as out:
-            out.write(str(r))
+            out.write(str(proc.returncode))
 
     def output(self):
         return luigi.LocalTarget(str(ctx['sysFolder']) + '/run/{{id}}.mrk')
