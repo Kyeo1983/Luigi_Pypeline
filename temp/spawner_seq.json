@@ -3,7 +3,7 @@
 	"sequence" : [
 		{
 			"id": "1",
-			"stage": "spawn_job_process.py",
+			"stage": "spawn_job_process",
 			"param_jobname": "sample_stage.sh"
 		}
 	]
