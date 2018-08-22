@@ -9,5 +9,9 @@ conf = {
     "helper.ospath": {
         "package": "helper",
         "importclass": "ospath"
+    },
+    "subprocess.Popen": {
+        "package": "subprocess",
+        "importclass": "Popen"
     }
 }

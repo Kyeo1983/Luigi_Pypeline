@@ -1,0 +1,10 @@
+{
+	"name" : "job_cmdline",
+	"sequence" : [
+		{
+			"id": "1",
+			"stage": "cmd_line_process",
+			"param_cmdline": "ls -la"
+		}
+	]
+}
