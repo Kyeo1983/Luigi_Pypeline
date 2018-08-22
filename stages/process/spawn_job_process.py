@@ -43,7 +43,7 @@ class {{job}}_{{id}}(luigi.Task):
     
     
     def run(self):
-        wait_time = appConfig().waitTime
+        wait_time = appConfig().wait_time
         end_time = datetime.now().replace(hour=22, minute=0)
 
         while (datetime.now() < end_time):
