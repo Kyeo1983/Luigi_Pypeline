@@ -8,7 +8,7 @@ class {{job}}_{{id}}(luigi.Task):
     
     def run(self):
         wait_time = appConfig().wait_time
-        end_time = datetime.now().replace(hour=20, minute=55)
+        end_time = datetime.now().replace(hour=14, minute=10)
 
 
         def scanJobTable():
