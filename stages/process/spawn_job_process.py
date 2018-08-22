@@ -8,7 +8,7 @@ class {{job}}_{{id}}(luigi.Task):
     
     def run(self):
         wait_time = appConfig().wait_time
-        end_time = datetime.now().replace(hour=22, minute=0)
+        end_time = datetime.now().replace(hour=20, minute=55)
 
 
         def scanJobTable():
@@ -31,12 +31,15 @@ class {{job}}_{{id}}(luigi.Task):
                     next_run_time = datetime.strptime(row[dbcol['NEXT_RUN_TIME']], '%H:%M').time()
                     next_run_ok = next_run_time.time() <= now.time()
 
+                print('load:{}, time:{}, day:{}, next:{}'.format(loaded_ok, time_ok, day_ok, next_run_ok))
                 if loaded_ok and time_ok and day_ok and next_run_ok:
+                    print('>>>> RUNNING job {}'.format(row[dbcol['JOBNAME']]))
                     runJob(row[dbcol['JOBNAME']], row[dbcol['FREQ']])
 
 
         def runJob(jobname, freq):
             devnull = subprocess.DEVNULL
+            print('>>> RUNNING SUBPROCESS ./{}.sh'.format(jobname))
             proc = Popen(['./{}.sh'.format(jobname)], stdout=devnull, stderr=devnull)
 
             if freq is None or math.isnan(freq):
@@ -48,6 +51,7 @@ class {{job}}_{{id}}(luigi.Task):
         
         
         while (datetime.now() < end_time):
+            print('>>> wait time: {}'.format(wait_time))
             scanJobTable()
             time.sleep(wait_time)
         
