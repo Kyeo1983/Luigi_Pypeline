@@ -9,7 +9,7 @@ conf = {
     },
     "spawn_job_process": {
         "path": "./stages/process/spawn_job_process.py",
-        "dependencies": ["pandas", "subprocess.Popen"]
+        "dependencies": ["pandas", "math", "time", "datetime.timedelta", "subprocess.Popen"]
     },
     "cmd_line_process": {
         "path": "./stages/process/cmd_line_process.py",

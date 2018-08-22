@@ -13,5 +13,15 @@ conf = {
     "subprocess.Popen": {
         "package": "subprocess",
         "importclass": "Popen"
+    },
+    "time": {
+        "package": "time"
+    },
+    "math": {
+        "package": "math"
+    },
+    "datetime.timedelta": {
+        "package": "datetime",
+        "importclass" : "timedelta"
     }
 }
