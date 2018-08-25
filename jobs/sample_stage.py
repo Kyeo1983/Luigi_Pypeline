@@ -1,3 +1,5 @@
+import logging
+import logging.config
 import luigi
 import json
 import os
@@ -7,13 +9,18 @@ import shutil
 import subprocess
 from datetime import datetime
 sys.path.append('../../utilities')
-
 import pandas as pd
 import subprocess
 ctx = {'sysFolder' : '/home/kyeo/pypeline/jobs/jobmarkers/sample_stage'}
 ctx['sysJobName'] = 'sample_stage'
+
+logging.config.fileConfig('/home/kyeo/pypeline/luigi_central_scheduler/luigi_log.cfg')
+logger = logging.getLogger("luigi-interface")
+logger.info('>>> STARTING LOG ')
+
 class sample_stage_start(luigi.Task):
     def run(self):
+        logger.info('>>> in Luigi step 1')
         ctx['sysStatus'] = 'running'
         
         foldername = str(ctx['sysFolder']) + '/run'
