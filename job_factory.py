@@ -13,6 +13,7 @@ from utilities.helper.ospath import OSPath
 
 
 BASE_PATH = Path('.')
+LOG_CONFIG_PATH = BASE_PATH / 'luigi_central_scheduler' / 'luigi_log.cfg'
 JOB_PATH = BASE_PATH / 'jobs'
 JOB_MARKER_PATH = JOB_PATH / 'jobmarkers'
 STAGE_PATH = BASE_PATH / 'stages'
@@ -89,13 +90,15 @@ for imports in to_import:
     output.write('{}\n'.format(importstr))
     
 
-# Writing Folder to Script
+# Writing top-level job and config specific data to global param in workflow   
+# 1. Writing Folder to Script
 sysFolder = OSPath.path(JOB_MARKER_PATH / job_name)
 output.write("ctx = {{'sysFolder' : '{}'}}\n".format(sysFolder))
-
-
-# Writing Job Name to Script
+# 2. Writing Job Name to Script
 output.write("ctx['sysJobName'] = '{}'\n".format(job_name))
+# 3. Writing Logger to Script
+logCfgPath = OSPath.path(LOG_CONFIG_PATH)
+output.write("ctx['sysLogConfig'] = '{}'\n".format(logCfgPath))
 
 
 for item in rendered:
