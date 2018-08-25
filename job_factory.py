@@ -117,7 +117,7 @@ output.write("ctx['sysJobName'] = '{}'\n".format(job_name))
 # 3. Writing Logger to Script
 output.write("ctx['sysLogConfig'] = '{}'\n".format(logCfgPath))
 output.write("logging.config.fileConfig(ctx['sysLogConfig'])\n")
-output.write("logger = logging.getLogger({})\n".format(STAGE_LOGGER))
+output.write("logger = logging.getLogger('{}')\n".format(STAGE_LOGGER))
 
 
 for item in rendered:
