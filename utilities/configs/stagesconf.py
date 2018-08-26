@@ -1,3 +1,6 @@
+"""
+Only has a conf dict object containing configurations of all supported stages for use in pypeline generated Luigi scripts.
+"""
 conf = {
     "sample_stage": {
         "path": "./stages/operations/sample_stage.py",

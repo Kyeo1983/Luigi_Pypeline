@@ -14,7 +14,7 @@ class OSPath:
         
         :param p: pathlib's Path object representing an OS path.
         :type p: pathlib.Path
-        :returns: string
+        :returns: String representation of the path suitable for the OS to use in a open(...) call.
         """
         if os.name == 'nt':
             # on windows

@@ -1,3 +1,6 @@
+"""
+Only has a conf dict object containing configurations of all supported import packages to use in pypeline generated Luigi scripts.
+"""
 conf = {
     "pandas": {
         "package": "pandas",
