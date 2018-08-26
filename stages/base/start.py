@@ -1,5 +1,10 @@
 class {{job}}_start(luigi.Task):
     def run(self):
+        """Initializes settings for a new job flow.
+        Sets global sysStatus to 'running'.
+        Sets global sysFolder path.        
+        """
+
         ctx['sysStatus'] = 'running'
         
         foldername = str(ctx['sysFolder']) + '/run'
