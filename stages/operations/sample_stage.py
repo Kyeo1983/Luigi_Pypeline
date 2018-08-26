@@ -3,7 +3,8 @@ class {{job}}_{{id}}(luigi.Task):
         return {{job}}_{{parent}}()
     
     def run(self):
-        """Just put a string variable to ctx (for testing purposes).
+        """
+        Just put a string variable to ctx (for testing purposes).
         """
 
         myvar = "Within Sample run"
