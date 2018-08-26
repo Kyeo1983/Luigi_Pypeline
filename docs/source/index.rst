@@ -1,10 +1,12 @@
-.. pypeline documentation master file, created by
-   sphinx-quickstart on Sun Aug 26 06:57:37 2018.
+.. codebase documentation master file, created by
+   sphinx-quickstart on Mon Feb 26 16:32:01 2018.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to pypeline's documentation!
+Welcome to codebase's documentation!
 ====================================
+
+.. include:: modules.rst
 
 .. toctree::
    :maxdepth: 2

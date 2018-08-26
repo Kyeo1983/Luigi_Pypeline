@@ -4,7 +4,7 @@
 #
 # This file does only contain a selection of the most common options. For a
 # full list see the documentation:
-# http://www.sphinx-doc.org/en/master/config
+# http://www.sphinx-doc.org/en/stable/config
 
 # -- Path setup --------------------------------------------------------------
 
@@ -12,21 +12,21 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+import sys
+sys.path.insert(0, os.path.abspath('/home/kyeo/pypeline'))
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'pypeline'
-copyright = '2018, Kelvin Yeo'
-author = 'Kelvin Yeo'
+project = u'codebase'
+copyright = u'2018, Kelvin Yeo'
+author = u'Kelvin Yeo'
 
 # The short X.Y version
-version = ''
+version = u''
 # The full version, including alpha/beta/rc tags
-release = '1.01'
+release = u''
 
 
 # -- General configuration ---------------------------------------------------
@@ -40,8 +40,6 @@ release = '1.01'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.todo',
-    'sphinx.ext.imgmath',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -104,7 +102,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'pypelinedoc'
+htmlhelp_basename = 'codebasedoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -131,8 +129,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'pypeline.tex', 'pypeline Documentation',
-     'Kelvin Yeo', 'manual'),
+    (master_doc, 'codebase.tex', u'codebase Documentation',
+     u'Kelvin Yeo', 'manual'),
 ]
 
 
@@ -141,7 +139,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'pypeline', 'pypeline Documentation',
+    (master_doc, 'codebase', u'codebase Documentation',
      [author], 1)
 ]
 
@@ -152,15 +150,10 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'pypeline', 'pypeline Documentation',
-     author, 'pypeline', 'One line description of project.',
+    (master_doc, 'codebase', u'codebase Documentation',
+     author, 'codebase', 'One line description of project.',
      'Miscellaneous'),
 ]
 
 
 # -- Extension configuration -------------------------------------------------
-
-# -- Options for todo extension ----------------------------------------------
-
-# If true, `todo` and `todoList` produce output, else they produce nothing.
-todo_include_todos = True

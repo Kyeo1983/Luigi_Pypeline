@@ -1,4 +1,6 @@
-echo "Uncomment this to recreate docs: sphinx-apidoc -f -o /home/kyeo/pypeline/docs /home/kyeo/pypeline"
+#Uncomment this to recreate docs.
+sphinx-apidoc -f -o ./source /home/kyeo/pypeline/utilities
+
 rm -R ~/pypeline/docs/build/doctrees
 rm -R ~/pypeline/docs/build/html
 PYTHONPATH="../" make html
