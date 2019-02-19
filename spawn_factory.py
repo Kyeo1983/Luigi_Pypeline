@@ -8,8 +8,9 @@ from pathlib import Path
 
 
 import sys
-sys.path.append('../utilities')
-from utilities.helper.ospath import OSPath
+sys.path.append('../configs')
+sys.path.append('../utils')
+from helper.ospath import OSPath
 
 
 BASE_PATH = Path('.')
@@ -17,8 +18,8 @@ JOB_PATH = BASE_PATH / 'jobs'
 JOB_MARKER_PATH = JOB_PATH / 'jobmarkers'
 STAGE_PATH = BASE_PATH / 'stages'
 BASE_STAGE_PATH = STAGE_PATH / 'base'
-from utilities.configs.importsconf import conf as importsconfig
-from utilities.configs.stagesconf import conf as stagesconfig
+from configs.importsconf import conf as importsconfig
+from configs.stagesconf import conf as stagesconfig
 
 
 input_file = json.load(open('./temp/spawner_seq.json', 'r'))

@@ -8,8 +8,9 @@ from pathlib import Path
 from datetime import datetime
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
-sys.path.append('../utilities')
-from utilities.helper.ospath import OSPath
+sys.path.append('../configs')
+sys.path.append('../utils')
+from helper.ospath import OSPath
 
 
 
@@ -21,8 +22,8 @@ JOB_PATH = BASE_PATH / 'jobs'
 JOB_MARKER_PATH = JOB_PATH / 'jobmarkers'
 STAGE_PATH = BASE_PATH / 'stages'
 BASE_STAGE_PATH = STAGE_PATH / 'base'
-from utilities.configs.importsconf import conf as importsconfig
-from utilities.configs.stagesconf import conf as stagesconfig
+from configs.importsconf import conf as importsconfig
+from configs.stagesconf import conf as stagesconfig
 
 
 # Prepare logger for job factory
@@ -112,9 +113,15 @@ logger.info('Written all imports for job')
 # 1. Writing Folder to Script
 sysFolder = OSPath.path(JOB_MARKER_PATH / job_name)
 output.write("ctx = {{'sysFolder' : '{}'}}\n".format(sysFolder))
-# 2. Writing Job Name to Script
+# 2. Writing Run Folder to Script
+sysRunFolder = OSPath.path(sysFolder / 'run')
+output.write("ctx['sysRunFolder'] = '{}'\n".format(sysRunFolder))
+# 3. Writing Last Saved State Folder to Script
+sysSaveFolder = OSPath.path(sysRunFolder / 'save')
+output.write("ctx['sysSaveFolder'] = '{}'\n".format(sysSaveFolder))
+# 4. Writing Job Name to Script
 output.write("ctx['sysJobName'] = '{}'\n".format(job_name))
-# 3. Writing Logger to Script
+# 5. Writing Logger to Script
 output.write("ctx['sysLogConfig'] = '{}'\n".format(logCfgPath))
 output.write("logging.config.fileConfig(ctx['sysLogConfig'])\n")
 output.write("logger = logging.getLogger('{}')\n".format(STAGE_LOGGER))
@@ -126,6 +133,8 @@ for item in rendered:
     
 # prep bat file
 outputbat.write('#!/bin/sh\n')
+outputbat.write('rm -f -R {}/*\n'.format(sysRunFolder))
+outputbat.write('cp -f -R {} {}/*\n'.format(sysSaveFolder, sysRunFolder))
 outputbat.write('python -m luigi --module {} {}_end\n'.format(job_name, job_name))
 outputbat.close()
 output.close()
