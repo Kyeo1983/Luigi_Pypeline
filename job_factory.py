@@ -33,7 +33,7 @@ logger = logging.getLogger('job.factory')
 
 
 # Reading input file
-filename = './temp/inputs.json'
+filename = './inputs/inputs.json'
 logger.info('Reading from file {}'.format(filename))
 input_file = json.load(open(filename, 'r'))
 job_name = input_file['name']
@@ -51,7 +51,7 @@ def render(tpl_path, context):
     path, filename = os.path.split(tpl_path)
     return Environment(loader=FileSystemLoader(path or './')).get_template(filename).render(context)
 
-    
+
 output = open(OSPath.path(outputfile), 'w')
 outputbat = open(OSPath.path(outputbatfile), 'w')
 output.write("".join(open(OSPath.path(BASE_STAGE_PATH / 'imports.py'), "r").readlines()) + "\n")
@@ -71,7 +71,7 @@ logger.info('Written job {} start stage.'.format(job_name))
 for step in input_steps:
     if 'parent' not in step:
         step['parent'] = 'start'
-    
+
     step['job'] = job_name
     stageconf = stagesconfig[step['stage']]
     ren = render(stageconf['path'], step)
@@ -80,20 +80,20 @@ for step in input_steps:
 
     # getting needed imports into list
     to_import = to_import + [i for i in stageconf['dependencies'] if i not in to_import]
-    
+
     # adding the ending
     list_job_id.append(step['id'])
     list_parent_id.append(step['parent'])
 
-# Adding last (end) stage that is dependency on all other jobs 
+# Adding last (end) stage that is dependency on all other jobs
 list_leaf_stagenames = list(map(lambda leaf_node: "{}_{}()".format(job_name, str(leaf_node)), [x for x in list_job_id if x not in list_parent_id]))
 end_stg = { 'job': job_name, 'stage': 'end', 'parent': ','.join(list_leaf_stagenames) }
 
 ren = render(OSPath.path(BASE_STAGE_PATH / 'end.py'), end_stg)
 rendered.append('{}\n'.format(ren))
 logger.info('Written end stage for job : {}.'.format(job_name))
-    
-    
+
+
 # looping through import list and write import lines
 for imports in to_import:
     importconf = importsconfig[imports]
@@ -102,12 +102,12 @@ for imports in to_import:
         importstr = 'from {} import {}'.format(importconf['package'], importconf['importclass'])
     else:
         importstr = 'import {}'.format(importconf['package'])
-    
+
     if 'alias' in importconf:
-        importstr = '{} as {}'.format(importstr, importconf['alias'])        
+        importstr = '{} as {}'.format(importstr, importconf['alias'])
     output.write('{}\n'.format(importstr))
-logger.info('Written all imports for job')    
-    
+logger.info('Written all imports for job')
+
 
 # Writing top-level job and config specific data to global param in workflow   
 # 1. Writing Folder to Script
@@ -129,8 +129,8 @@ output.write("logger = logging.getLogger('{}')\n".format(STAGE_LOGGER))
 
 for item in rendered:
     output.write("{}\n".format(item))
-    
-    
+
+
 # prep bat file
 outputbat.write('#!/bin/sh\n')
 outputbat.write('rm -f -R {}/*\n'.format(sysRunFolder))
