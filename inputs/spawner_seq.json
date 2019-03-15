@@ -1,0 +1,9 @@
+{
+    "name" : "job_spawner",
+    "sequence" : [
+        {
+            "id" : "spawn",
+            "stage" : "spawn_job_process"
+        }
+    ]
+}
