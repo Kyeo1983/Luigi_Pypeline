@@ -6,6 +6,22 @@ conf = {
         "package": "pandas",
         "alias": "pd"
     },
+    "numpy": {
+        "package": "pandas",
+        "alias": "np"
+    },
+    "helper.database": {
+        "package": "helper",
+        "importclass": "database"
+    },
+    "zeep.Client": {
+        "package": "zeep.transports",
+        "importclass" : "Transport"
+    },
+    "zeep.transports.Tranport": {
+        "package": "zeep.transports",
+        "importclass" : "Transport"
+    },
     "subprocess": {
         "package": "subprocess"
     },
@@ -20,11 +36,23 @@ conf = {
     "time": {
         "package": "time"
     },
+    "re" : {
+        "package" : "re"
+    },
+    "zipfile" : {
+        "package" : "zipfile"
+    },
     "math": {
         "package": "math"
+    },
+    "requests": {
+        "package": "requests"
     },
     "datetime.timedelta": {
         "package": "datetime",
         "importclass" : "timedelta"
+    },
+    "calendar": {
+        "package": "calendar"
     }
 }
