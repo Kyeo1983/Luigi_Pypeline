@@ -31,4 +31,5 @@ conda install -y numpy
 conda install -y pandas
 conda install -y luigi
 conda install -y requests
+conda install -y sqlalchemy
 ```
