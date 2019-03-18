@@ -13,7 +13,7 @@ echo "Installing Miniconda"
 wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh
 chmod 755 miniconda.sh
 ./miniconda.sh
-echo "export LUIGI_CONFIG_PATH=\$HOME/pypeline/luigi/luigi_central_scheduler/luigi.cfg" >> ~/.bash_profile
+echo "export LUIGI_CONFIG_PATH=\$HOME/pypeline/luigi_central_scheduler/luigi.cfg" >> ~/.bash_profile
 echo "export PATH=\$PATH:\$HOME/miniconda3/bin" >> ~/.bash_profile
 
 
