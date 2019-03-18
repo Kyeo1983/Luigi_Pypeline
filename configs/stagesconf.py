@@ -17,5 +17,9 @@ conf = {
     "email": {
         "path": "./stages/operations/email.py",
         "dependencies": []
+    },
+    "email_file": {
+        "path": "./stages/operations/email_file.py",
+        "dependencies": []
     }
 }
