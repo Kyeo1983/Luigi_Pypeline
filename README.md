@@ -33,3 +33,11 @@ conda install -y luigi
 conda install -y requests
 conda install -y sqlalchemy
 ```
+
+Getting Started
+==================================
+```bash
+cd init
+source activate pipeline
+python setup.py
+```
