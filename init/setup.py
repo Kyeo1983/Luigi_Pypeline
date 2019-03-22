@@ -8,7 +8,7 @@ from configs.appconf import conf
 
 
 # Get path of db
-scheduler_db_path = conf.scheduler_db_path
+scheduler_db_path = conf["scheduler_db_path"]
 
 
 # Create DB if it doesn't exist
