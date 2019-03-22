@@ -2,6 +2,7 @@ import sqlite3
 from sqlite3 import Error
 from pathlib import Path
 # Import config file
+import sys
 sys.path.append('../')
 from configs.appconf import conf
 
