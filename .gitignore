@@ -1,3 +1,7 @@
+# Dynamically generated files
+luigi_central_scheduler/luigi_log.cfg
+luigi_central_scheduler/schedule.db
+
 # Local folders
 jobs/
 
