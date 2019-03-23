@@ -8,10 +8,9 @@ from pathlib import Path
 from datetime import datetime
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
-sys.path.append('../configs')
-sys.path.append('../utils')
+sys.path.append('./configs')
+sys.path.append('./utils')
 from helper.ospath import OSPath
-
 
 
 # Setting up base configurations
