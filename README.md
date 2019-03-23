@@ -5,6 +5,7 @@ Setup Server
 sudo apt-get update
 sudo apt-get -y install git
 git clone https://github.com/Kyeo1983/pypeline.git
+echo "export PYPELINE=\$HOME/pypeline" >> ~/.bash_profile
 
 echo "Installing bzip2, required for miniconda"
 sudo apt-get -y install bzip2
@@ -30,6 +31,7 @@ pip install --upgrade pip
 conda install -y numpy
 conda install -y pandas
 conda install -y luigi
+conda install -y jinja2
 conda install -y requests
 conda install -y sqlalchemy
 ```
@@ -40,4 +42,9 @@ Getting Started
 cd init
 source activate pipeline
 python setup.py
+```
+
+```bash
+cp ./luigi_central_scheduler/luigi_log.cfg.tmpl ./luigi_central_scheduler/luigi_log.cfg
+sed -i  "s@{PYPELINE}@"${PYPELINE}"@g" ./luigi_central_scheduler/luigi_log.cfg
 ```
