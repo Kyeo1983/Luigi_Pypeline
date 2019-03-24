@@ -46,5 +46,7 @@ python setup.py
 
 ```bash
 cp ./luigi_central_scheduler/luigi_log.cfg.tmpl ./luigi_central_scheduler/luigi_log.cfg
+cp ./luigi_central_scheduler/luigi.cfg.tmpl ./luigi_central_scheduler/luigi.cfg
 sed -i  "s@{PYPELINE}@"${PYPELINE}"@g" ./luigi_central_scheduler/luigi_log.cfg
+sed -i  "s@{PYPELINE}@"${PYPELINE}"@g" ./luigi_central_scheduler/luigi.cfg
 ```
