@@ -33,7 +33,7 @@ class {{job}}_end(luigi.Task):
 
         #Make directories if not exists
         ctx['sysEndFolder'] = os.path.join(ctx['sysRunFolder'] + '_' + datetime.now().strftime('%Y%m%d%H%M%S'))
-        for f in ['sysFolder', 'sysRunFolder',' sysEndFolder']:
+        for f in ['sysFolder', 'sysRunFolder', 'sysEndFolder']:
             foldername = str(ctx[f])
             if not os.path.exists(foldername):
                 os.makedirs(os.path.join(foldername))
