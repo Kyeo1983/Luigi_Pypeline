@@ -2,10 +2,10 @@
 class email(luigi.Config):
     sender = luigi.Parameter(default="luigi-noreply@pypeline.com")
     sendername = luigi.Parameter(default="Mario")
-    smtpPW = luigi.Parameter()
-    smtpUID = luigi.Parameter()
-    smtpHost = luigi.Parameter()
-    smtpPort = luigi.Parameter()
+    password = luigi.Parameter()
+    username = luigi.Parameter()
+    host = luigi.Parameter()
+    port = luigi.Parameter()
 
 class {{job}}_{{id}}(luigi.Task):
     def required(self):
@@ -16,7 +16,7 @@ class {{job}}_{{id}}(luigi.Task):
         """
         emailconf = email()
         subprocess.call('echo "{}" | s-nail -s "{}" -r "{}<{}>" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth-login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'
-        .format('{{param_in_body}}', '{{param_in_title}}', emailconf.sendername, emailconf.sender, emailconf.smtpHost, emailconf.smtpPort, emailconf.smtpUID, emailconf.smtpPW, emailconf.receiver, '{{param_in_recipient}}'), shell=True)
+        .format('{{param_in_body}}', '{{param_in_title}}', emailconf.sendername, emailconf.sender, emailconf.host, emailconf.port, emailconf.username, emailconf.password, emailconf.receiver, '{{param_in_recipient}}'), shell=True)
 
         with open(self.output().path, 'w') as out:
             out.write('sent')
