@@ -11,7 +11,7 @@ class {{job}}_{{id}}(luigi.Task):
         """ Sends an email with message
         """
         emailconf = email()
-        subprocess.call('echo "{}" -r "{}" {}'.format('{{param_in_body}}', '{{param_in_title}}', emailconf.sender, '{{param_in_recipient}}'), shell=True)
+        subprocess.call('echo "{}" | mail -s "{}" -r "{}" {}'.format('{{param_in_body}}', '{{param_in_title}}', emailconf.sender, '{{param_in_recipient}}'), shell=True)
 
         with open(self.output().path, 'w') as out:
             out.write('sent')

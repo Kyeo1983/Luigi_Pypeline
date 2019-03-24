@@ -3,6 +3,9 @@ Setup Server
 
 ```bash
 sudo apt-get update
+sudo apt-get install mailutils
+sudo apt-get install heirloom-mailx
+
 sudo apt-get -y install git
 git clone https://github.com/Kyeo1983/pypeline.git
 echo "export PYPELINE=\$HOME/pypeline" >> ~/.bash_profile

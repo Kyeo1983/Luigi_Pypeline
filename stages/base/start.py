@@ -18,15 +18,16 @@ class {{job}}_start(luigi.Task):
         global ctx
 
         ctx['sysStatus'] = 'running'
-        ctx['sysEndFolder'] = os.path.join(ctx['sysRunFolder'] + '_' + datetime.now().strftime('%Y%m%d%H%M%S'))
         ctx['sysTempDir'] = ctx['sysRunFolder']
-
-        foldername = str(ctx['sysRunFolder'])
-        if not os.path.exists(foldername):
-            os.makedirs(os.path.join(foldername))
 
         with open(self.output().path, 'w') as out:
             out.write('started successfully')
 
     def output(self):
+        ctx['sysEndFolder'] = os.path.join(ctx['sysRunFolder'] + '_' + datetime.now().strftime('%Y%m%d%H%M%S'))
+        #Make directories if not exists
+        for f in ['sysFolder', 'sysRunFolder',' sysEndFolder']:
+            foldername = str(ctx[f])
+            if not os.path.exists(foldername):
+                os.makedirs(os.path.join(foldername))
         return luigi.LocalTarget(str(ctx['sysFolder']) + '/run/started.mrk')
