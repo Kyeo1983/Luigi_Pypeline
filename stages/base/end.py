@@ -14,6 +14,7 @@ class {{job}}_end(luigi.Task):
         return[{{parent}}]
 
     def run(self):
+        global ctx
         foldername = str(ctx['sysFolder'])
         if os.path.exists(foldername):
             shutil.copyTree(foldername, ctx['sysEndFolder'])
@@ -21,16 +22,17 @@ class {{job}}_end(luigi.Task):
         emailconf = email()
         subprocess.call('echo "Success" | s-nail -s "Job Success: {}" -r "{}<{}>" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth-login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'.format(ctx['sysJobName'], emailconf.sendername, emailconf.sender, emailconf.smtpHost, emailconf.smtpPort, emailconf.smtpUID, emailconf.smtpPW, emailconf.receiver), shell=True)
 
-
         with open(self.output().path, 'w') as out:
             out.write('ended successfully')
 
     def output(self):
-        ctx['sysEndFolder'] = os.path.join(ctx['sysRunFolder'] + '_' + datetime.now().strftime('%Y%m%d%H%M%S'))
+        global ctx
+
         #Make directories if not exists
+        ctx['sysEndFolder'] = os.path.join(ctx['sysRunFolder'] + '_' + datetime.now().strftime('%Y%m%d%H%M%S'))
         for f in ['sysFolder', 'sysRunFolder',' sysEndFolder']:
             foldername = str(ctx[f])
             if not os.path.exists(foldername):
-                os.makedirs(os.path.join(foldername)) 
-        
+                os.makedirs(os.path.join(foldername))
+
         return luigi.LocalTarget(ctx['sysRunFolder'] + '/ended.mrk')
