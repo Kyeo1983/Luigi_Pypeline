@@ -8,18 +8,20 @@ scheduler_end_minute=59
 
 [email]
 format=html
-receiver=test@server.com
+receiver={receiver_email}
 force-send=True
-sender=luigi-noreply@pypeline.com
+sender={sender_email}
 sendername=Luigi
-#smtpPW=
-#smtpUID=
-#smtpHost=
-#smtpPort=
+method=smtp
 prefix=[LUIGI]
 
-# [smtp]
-# host=servername
+[smtp]
+host={smtp_host}
+port=465
+username={smtp_username}
+password={smtp_password}
+ssl=True
+no_tls=False
 
 [batch_notifier]
 email_interval=1
@@ -37,7 +39,7 @@ unhandled_exception=40
 [scheduler]
 record_task_history=True
 remove_delay=86400
-state_path=../var/luigi/luigi-state.pickle
+state_path={PYPELINE}/var/luigi/luigi-state.pickle
 
 [task_history]
-db_connection=sqlite:///../var/luigi/luigi-task-hist.db
+db_connection=sqlite:///{PYPELINE}/var/luigi/luigi-task-hist.db
