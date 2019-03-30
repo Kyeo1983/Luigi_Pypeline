@@ -1,3 +1,6 @@
+# Personal settings
+init/configure.sh
+
 # Dynamically generated files
 luigi_central_scheduler/luigi.cfg
 luigi_central_scheduler/luigi_log.cfg
