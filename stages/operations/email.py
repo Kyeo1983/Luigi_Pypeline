@@ -18,8 +18,11 @@ class {{job}}_{{id}}(luigi.Task):
         """
         emailconf = email()
         smtpconf = smtp()
-        subprocess.call('echo "{}" | s-nail -s "{}" -r "{}<{}>" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth-login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'
-        .format('{{param_in_body}}', '{{param_in_title}}', emailconf.sendername, emailconf.sender, smtpconf.host, smtpconf.port, smtpconf.username, smtpconf.password, '{{param_in_recipient}}'), shell=True)
+
+        cmd = 'echo "{}" | s-nail -s "{}" -r "{}<{}>" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth-login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'
+        .format('{{param_in_body}}', '{{param_in_title}}', emailconf.sendername, emailconf.sender, smtpconf.host, smtpconf.port, smtpconf.username, smtpconf.password, '{{param_in_recipient}}')
+        logger.info(cmd)
+        subprocess.call(cmd, shell=True)
 
 
         with open(self.output().path, 'w') as out:
