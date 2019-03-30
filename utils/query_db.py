@@ -19,7 +19,7 @@ sql = sys.argv[1]
 c = conn.cursor()
 
 if (sql[:6].lower() == "select"):
-    rows = cur.fetchall()
+    rows = c.fetchall()
     for row in rows:
         print(row)
 else:
