@@ -17,10 +17,8 @@ conn = sqlite3.connect(scheduler_db_path)
 # Get query from argument
 sql = sys.argv[1]
 c = conn.cursor()
+c.execute(sql)
 
-if (sql[:6].lower() == "select"):
-    rows = c.fetchall()
-    for row in rows:
-        print(row)
-else:
-    c.execute(sql)
+rows = c.fetchall()
+for row in rows:
+    print(row)
