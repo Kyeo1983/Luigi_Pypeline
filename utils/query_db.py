@@ -18,7 +18,9 @@ conn = sqlite3.connect(scheduler_db_path)
 sql = sys.argv[1]
 c = conn.cursor()
 c.execute(sql)
+conn.commit()
 
 rows = c.fetchall()
+print(f"Records: {str(len(rows))}")
 for row in rows:
     print(row)
