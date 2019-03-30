@@ -1,8 +1,7 @@
 # Config classes should be camel cased
 class email(luigi.Config):
-    sender = luigi.Parameter(default="luigi-noreply@pypeline.com")
-    sendername = luigi.Parameter(default="Mario")
-    receiver = luigi.Parameter('kyeo_ses@yahoo.com')
+    sender = luigi.Parameter(default="Luigi<luigi-noreply@pypeline.com>")
+    receiver = luigi.Parameter()
 
 class smtp(luigi.Config):
     password = luigi.Parameter()
@@ -23,7 +22,8 @@ class {{job}}_end(luigi.Task):
 
         emailconf = email()
         smtpconf = smtp()
-        subprocess.call('echo "Success" | s-nail -s "Job Success: {}" -r "{}<{}>" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth-login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'.format(ctx['sysJobName'], emailconf.sendername, emailconf.sender, smtpconf.host, smtpconf.port, smtpconf.username, smtpconf.password, emailconf.receiver), shell=True)
+        cmd = 'echo "Success" | s-nail -s "Job Success: {}" -r "{}" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth=login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'.format(ctx['sysJobName'], emailconf.sender, smtpconf.host, smtpconf.port, smtpconf.username, smtpconf.password, emailconf.receiver)
+        subprocess.call(cmd, shell=True)
 
         with open(self.output().path, 'w') as out:
             out.write('ended successfully')

@@ -8,7 +8,9 @@ class {{job}}_{{id}}(luigi.Task):
         """
         tmpdir = ctx['sysTempDir']
         emailconf = email()
-        subprocess.call('echo "Success" | mail -s "{}" -a {} -r "{}<{}>" {}'.format('{{param_in_title}}', {{param_in_filepath}}, emailconf.sendername, emailconf.sender, '{{param_in_recipient}}'), shell=True)
+        smtpconf = smtp()
+        cmd = 'echo "Success" | s-nail -s "{}" -a {} -r "{}" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth=login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'.format('{{param_in_title}}', {{param_in_filepath}}, emailconf.sender, smtpconf.host, smtpconf.port, smtpconf.username, smtpconf.password, '{{param_in_recipient}}')
+        subprocess.call(cmd, shell=True)
 
         with open(self.output().path, 'w') as out:
             out.write('sent')
