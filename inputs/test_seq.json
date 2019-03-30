@@ -1,0 +1,12 @@
+{
+    "name" : "test_job",
+    "sequence" : [
+        {
+            "id" : "email",
+            "stage" : "email",
+            "param_in_body" : "Test success",
+            "param_in_recipient" : "youremail@somedomain.com",
+            "param_in_title" : "Test title"
+        }
+    ]
+}
