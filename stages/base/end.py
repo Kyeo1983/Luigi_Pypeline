@@ -18,7 +18,7 @@ class {{job}}_end(luigi.Task):
         global ctx
         foldername = str(ctx['sysFolder'])
         if os.path.exists(foldername):
-            shutil.copyTree(foldername, ctx['sysEndFolder'])
+            shutil.copytree(foldername, ctx['sysEndFolder'])
 
         emailconf = email()
         smtpconf = smtp()
