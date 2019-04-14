@@ -1,6 +1,10 @@
 # Personal settings
 init/configure.sh
 
+# Personal files
+data/*.*
+temp/*.*
+
 # Dynamically generated files
 luigi_central_scheduler/luigi.cfg
 luigi_central_scheduler/luigi_log.cfg
@@ -8,7 +12,6 @@ luigi_central_scheduler/schedule.db
 jobs/jobmarkers/
 jobs/*.sh
 jobs/*.py
-data/*.*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
