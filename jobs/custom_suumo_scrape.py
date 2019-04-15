@@ -428,7 +428,7 @@ class custom_suumo_scrape_1(luigi.Task):
         ##### End of main logic #####
 
         ##### Start of execution #####
-        content_link_file = '../data/summolinks.xlsx'
+        content_link_file = '../data/suumolinks.xlsx'
         areas = ['Tokyo_23']
         output_name = Path(str(ctx['sysRunFolder'])) / 'suumo_links.csv'
         # First read in the link list of all the cities
