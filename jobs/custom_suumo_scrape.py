@@ -238,18 +238,17 @@ class custom_suumo_scrape_1(luigi.Task):
         	index_chunk_completed = get_index_chunk_completed(pickle_filename)
 
         	for index, list_chunk in tqdm(enumerate(list_chunks, start=0), desc="Total", total=total_chunks, unit="chunk"):
-        		if (index > index_chunk_completed):
-        			logger.info("Scraping chunk {0}".format(index))
-        			_scrape_chunk(list_chunk, index, out_csv_filename, scraping_function)
+                 if (index > index_chunk_completed):
+                     logger.info("Scraping chunk {0}".format(index))
+                     _scrape_chunk(list_chunk, index, out_csv_filename, scraping_function)
+                     index_chunk_completed += 1
+                     write_index_chunk_completed(index_chunk_completed, pickle_filename)
+                     if (index_chunk_completed % 1000 == 0):
+                         emailconf = email()
+                         subprocess.call('echo "Indexed {}" | mail -s "Job Update: {}" {} -aFrom:{}\<{}\>'.format(index_chunk_completed, ctx['sysJobName'], emailconf.receiver, emailconf.sendername, emailconf.sender), shell=True)
 
-        			index_chunk_completed += 1
-        			write_index_chunk_completed(index_chunk_completed, pickle_filename)
-                    if (index_chunk_completed % 1000 == 0):
-                        emailconf = email()
-                        subprocess.call('echo "Indexed {}" | mail -s "Job Update: {}" {} -aFrom:{}\<{}\>'.format(index_chunk_completed, ctx['sysJobName'], emailconf.receiver, emailconf.sendername, emailconf.sender), shell=True)
-
-        		else:
-        			logger.debug("Skipping chunk {0}".format(index))
+                else:
+                    logger.debug("Skipping chunk {0}".format(index))
 
 
         # [MODIFY THIS] #########################################################################
