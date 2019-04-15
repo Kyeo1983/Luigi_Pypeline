@@ -234,7 +234,7 @@ class custom_suumo_scrape_1(luigi.Task):
             list_chunks = _list_to_chunks(in_list, CHUNKSIZE)
             total_chunks = math.ceil(len(in_list) / CHUNKSIZE)
 
-            pickle_filename = out_csv_filename / ".chunks.pkl"
+            pickle_filename = str(out_csv_filename) + ".chunks.pkl"
             logger.info("Saving to pickle {}".format(pickle_filename))
             index_chunk_completed = get_index_chunk_completed(pickle_filename)
 
