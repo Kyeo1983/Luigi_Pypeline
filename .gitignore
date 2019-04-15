@@ -10,8 +10,8 @@ luigi_central_scheduler/luigi.cfg
 luigi_central_scheduler/luigi_log.cfg
 luigi_central_scheduler/schedule.db
 jobs/jobmarkers/
-jobs/*.sh
-jobs/*.py
+jobs/custom_*.sh
+jobs/custom_*.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
