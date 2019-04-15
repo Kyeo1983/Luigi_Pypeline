@@ -43,6 +43,7 @@ echo "Installing (optional) packages"
 pip install -y fake_useragent
 pip install -y http_request_randomizer
 conda install -y tqdm
+conda install -y xlrd
 ```
 
 
