@@ -5,6 +5,7 @@ Setup Server
 sudo apt-get update
 sudo apt-get install mailutils
 sudo apt-get install heirloom-mailx
+sudo apt-get install gcc
 
 sudo apt-get -y install git
 git clone https://github.com/Kyeo1983/pypeline.git
@@ -37,7 +38,13 @@ conda install -y luigi
 conda install -y jinja2
 conda install -y requests
 conda install -y sqlalchemy
+
+echo "Installing (optional) packages"
+pip install -y fake_useragent
+pip install -y http_request_randomizer
+conda install -y tqdm
 ```
+
 
 Getting Started
 ==================================
