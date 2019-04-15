@@ -346,8 +346,7 @@ class custom_suumo_scrape_1(luigi.Task):
             try:
                 for ct, hd in zip(content, header1):
                     key = hd.text
-                    contentlst[key] = ct.text.replace("\n", "").replace("\r", "").replace("\xa0", "")
-                    .replace("\u3000", "").replace("\t", "")
+                    contentlst[key] = ct.text.replace("\n", "").replace("\r", "").replace("\xa0", "").replace("\u3000", "").replace("\t", "")
             except:
                 logger.debug("Listing not available for a link in URL {}".format(url))
 
@@ -359,8 +358,7 @@ class custom_suumo_scrape_1(luigi.Task):
                 if len(data) > 0:
                     for d, h in zip(data[:12], header2[:12]):
                         key = h.text
-                        contentlst[key] = d.text.replace("\n", "").replace("\r", "").replace("\xa0", "")
-                        .replace("\u3000", "").replace("\t", "")
+                        contentlst[key] = d.text.replace("\n", "").replace("\r", "").replace("\xa0", "").replace("\u3000", "").replace("\t", "")
             except:
                 logger.debug("No table content found in URL {}".format(url))
 
@@ -372,8 +370,7 @@ class custom_suumo_scrape_1(luigi.Task):
 
             ## Rent
             try:
-                contentlst['Rent'] = soup.find_all("div", {"class": "property_view_main-emphasis"})[0].text
-                .replace("\n", "").replace("\r", "").replace("\xa0", "").replace("\u3000", "").replace("\t", "")
+                contentlst['Rent'] = soup.find_all("div", {"class": "property_view_main-emphasis"})[0].text.replace("\n", "").replace("\r", "").replace("\xa0", "").replace("\u3000", "").replace("\t", "")
             except:
                 logger.debug("No rent information found in URL {}".format(url))
 
@@ -381,8 +378,7 @@ class custom_suumo_scrape_1(luigi.Task):
 
             trains = soup.find_all("div", {"class": "property_view_detail-text"})
             try:
-                contentlst['Location'] = trains[-1].text.replace("\n", "").replace("\r", "").replace("\xa0", "")
-                .replace("\u3000", "").replace("\t", "")
+                contentlst['Location'] = trains[-1].text.replace("\n", "").replace("\r", "").replace("\xa0", "").replace("\u3000", "").replace("\t", "")
                 for i in range(len(trains)):
                     if trains[i].text[-1] == '分':
                         key = 'Train' + str(i)
@@ -394,8 +390,7 @@ class custom_suumo_scrape_1(luigi.Task):
 
             ## get photo url
             try:
-                contentlst['Image_url'] = soup.find('div',{'class','property_view_gallery-thumbnail-list'})
-                .find_all('li')[-1].find('img')['src']
+                contentlst['Image_url'] = soup.find('div',{'class','property_view_gallery-thumbnail-list'}).find_all('li')[-1].find('img')['src']
             except:
                 logger.debug('No image url found in URL {}'.format(url))
 
