@@ -153,7 +153,9 @@ class custom_suumo_scrape_1(luigi.Task):
             # Start scraping
             with ThreadPool(NUM_THREADS) as p:
                 wrapped_list_results = list(
-                    tqdm(p.imap(_scrape_map_function, in_list), desc="Pages in Chunk", total=len(in_list), leave=False, unit="pg"))
+                    # tqdm(
+                    p.imap(_scrape_map_function, in_list), desc="Pages in Chunk", total=len(in_list), leave=False, unit="pg")
+                    #)
                 try:
                     pool_result.extend([item for sublist in wrapped_list_results for item in sublist])
                 except:
@@ -235,6 +237,7 @@ class custom_suumo_scrape_1(luigi.Task):
             total_chunks = math.ceil(len(in_list) / CHUNKSIZE)
 
             pickle_filename = out_csv_filename / ".chunks.pkl"
+            logger.info("Saving to pickle {}".format(pickle_filename))
             index_chunk_completed = get_index_chunk_completed(pickle_filename)
 
             for index, list_chunk in tqdm(enumerate(list_chunks, start=0), desc="Total", total=total_chunks, unit="chunk"):
@@ -243,6 +246,8 @@ class custom_suumo_scrape_1(luigi.Task):
                     _scrape_chunk(list_chunk, index, out_csv_filename, scraping_function)
                     index_chunk_completed += 1
                     write_index_chunk_completed(index_chunk_completed, pickle_filename)
+                    if (index_chunk_completed % 100 == 0):
+                        logger.info('Scrape completed {}'.format(index_chunk_completed))
                     if (index_chunk_completed % 1000 == 0):
                         emailconf = email()
                         smtpconf = smtp()
@@ -423,9 +428,10 @@ class custom_suumo_scrape_1(luigi.Task):
         ##### End of main logic #####
 
         ##### Start of execution #####
-        content_link_file = '../data/suumolinks.xlsx'
+        content_link_file = Path('../data/suumolinks.xlsx')
         areas = ['Tokyo_23']
         output_name = Path(str(ctx['sysRunFolder'])) / 'suumo_links.csv'
+        logger.info('Output CSV at {}'.format(output_name))
         # First read in the link list of all the cities
         logger.info("Generating list of links to scrape")
         fulllink = get_content_page_urls(content_link_file, areas)
