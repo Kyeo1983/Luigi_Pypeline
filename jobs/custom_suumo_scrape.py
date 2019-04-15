@@ -25,7 +25,7 @@ sys.path.append('../../utilities')
 
 import pandas as pd
 import subprocess
-ctx = {'sysFolder' : '/home/kyeo/pypeline/jobs/jobmarkers/suumo_scrape'}
+ctx = {'sysFolder' : '/home/kyeo/pypeline/jobs/jobmarkers/custom_suumo_scrape'}
 ctx['sysJobName'] = 'suumo_scrape'
 ctx['sysLogConfig'] = '/home/kyeo/pypeline/luigi_central_scheduler/luigi_log.cfg'
 logging.config.fileConfig(ctx['sysLogConfig'])
