@@ -194,9 +194,6 @@ class custom_suumo_scrape_1(luigi.Task):
         def write_index_chunk_completed(index, filename):
                 logger.debug("Saving status of chunk {0}".format(index))
                 _write_pickle(index, filename)
-                if (index_chunk_completed % 1000 == 0):
-                    emailconf = email()
-                    subprocess.call('echo "Indexed {}" | mail -s "Job Update: {}" {} -aFrom:{}\<{}\>'.format(index_chunk_completed, ctx['sysJobName'], emailconf.receiver, emailconf.sendername, emailconf.sender), shell=True)
 
 
         def get_index_chunk_completed(filename):
@@ -247,6 +244,10 @@ class custom_suumo_scrape_1(luigi.Task):
 
         			index_chunk_completed += 1
         			write_index_chunk_completed(index_chunk_completed, pickle_filename)
+                    if (index_chunk_completed % 1000 == 0):
+                        emailconf = email()
+                        subprocess.call('echo "Indexed {}" | mail -s "Job Update: {}" {} -aFrom:{}\<{}\>'.format(index_chunk_completed, ctx['sysJobName'], emailconf.receiver, emailconf.sendername, emailconf.sender), shell=True)
+
         		else:
         			logger.debug("Skipping chunk {0}".format(index))
 
