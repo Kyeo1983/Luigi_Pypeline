@@ -20,32 +20,36 @@ from fake_useragent import UserAgent
 from http_request_randomizer.requests.proxy.requestProxy import RequestProxy
 from tqdm import tqdm
 from bs4 import BeautifulSoup
-sys.path.append('../../utilities')
-
-
+sys.path.append('../utils')
+from pathlib import Path
 import pandas as pd
-import subprocess
-ctx = {'sysFolder' : '/home/kyeo/pypeline/jobs/jobmarkers/custom_suumo_scrape'}
-ctx['sysJobName'] = 'suumo_scrape'
-ctx['sysLogConfig'] = '/home/kyeo/pypeline/luigi_central_scheduler/luigi_log.cfg'
+
+
+ctx = {'sysFolder' : '/home/kyeoses/pypeline/jobs/jobmarkers/custom_suumo_scrape'}
+ctx['sysRunFolder'] = '/home/kyeoses/pypeline/jobs/jobmarkers/custom_suumo_scrape/run'
+ctx['sysSaveFolder'] = '/home/kyeoses/pypeline/jobs/jobmarkers/custom_suumo_scrape/run/save'
+ctx['sysJobName'] = 'custom_suumo_scrape'
+ctx['sysLogConfig'] = '/home/kyeoses/pypeline/luigi_central_scheduler/luigi_log.cfg'
 logging.config.fileConfig(ctx['sysLogConfig'])
-logger = logging.getlogger('luigi-interface')
+logger = logging.getLogger('luigi-interface')
+
 
 
 # Config classes should be camel cased
 class email(luigi.Config):
-    sender = luigi.Parameter(default="luigi-noreply@pypeline.com")
-    sendername = luigi.Parameter(default="Mario")
+    sender = luigi.Parameter(default="Luigi<luigi-noreply@pypeline.com>")
     receiver = luigi.Parameter()
+class smtp(luigi.Config):
+    password = luigi.Parameter()
+    username = luigi.Parameter()
+    host = luigi.Parameter()
+    port = luigi.Parameter()
 
 
 class custom_suumo_scrape_start(luigi.Task):
     def run(self):
         ctx['sysStatus'] = 'running'
-
-        ctx['sysRunFolder'] = str(ctx['sysFolder']) + '/run'
-        if not os.path.exists(ctx['sysRunFolder']):
-            os.makedirs(os.path.join(ctx['sysRunFolder']))
+        ctx['sysTempFolder'] = ctx['sysRunFolder']
 
         with open(self.output().path, 'w') as out:
             out.write('started successfully')
@@ -443,6 +447,7 @@ class custom_suumo_scrape_1(luigi.Task):
         return luigi.LocalTarget(str(ctx['sysFolder']) + '/run/1.mrk')
 
 
+
 class custom_suumo_scrape_end(luigi.Task):
     def requires(self):
         return[custom_suumo_scrape_1()]
@@ -450,7 +455,25 @@ class custom_suumo_scrape_end(luigi.Task):
     def run(self):
         foldername = str(ctx['sysFolder'])
         if os.path.exists(foldername):
-            shutil.move(os.path.join(foldername + '/run'), os.path.join(foldername + '/run_' + datetime.now().strftime('%Y%m%d%H%M%S')))
+            shutil.copytree(foldername, ctx['sysEndFolder'])
 
         emailconf = email()
-        subprocess.call('echo "Success" | mail -s "Job Success: {}" {} -aFrom:{}\<{}\>'.format(ctx['sysJobName'], emailconf.receiver, emailconf.sendername, emailconf.sender), shell=True)
+        smtpconf = smtp()
+        cmd = 'echo "Success" | s-nail -s "Job Success: {}" -r "{}" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth=login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'.format(ctx['sysJobName'], emailconf.sender, smtpconf.host, smtpconf.port, smtpconf.username, smtpconf.password, emailconf.receiver)
+        subprocess.call(cmd, shell=True)
+
+
+        with open(self.output().path, 'w') as out:
+            out.write('ended successfully')
+
+    def output(self):
+        global ctx
+
+        #Make directories if not exists
+        ctx['sysEndFolder'] = os.path.join(ctx['sysRunFolder'] + '_' + datetime.now().strftime('%Y%m%d%H%M%S'))
+        for f in ['sysFolder', 'sysRunFolder']:
+            foldername = str(ctx[f])
+            if not os.path.exists(foldername):
+                os.makedirs(os.path.join(foldername))
+    
+        return luigi.LocalTarget(ctx['sysRunFolder'] + '/ended.mrk')
