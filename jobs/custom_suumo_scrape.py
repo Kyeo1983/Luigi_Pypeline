@@ -208,7 +208,7 @@ class custom_suumo_scrape_1(luigi.Task):
         	logger.info("Last stopped at chunk index {0}".format(index_chunk_completed))
         	return index_chunk_completed
 
-
+        '''
         def start_scrape_by_chunk_csv(in_csv_filename, out_csv_filename, scraping_function):
         	logger.info("Reading CSV")
         	in_chunks = pd.read_csv(in_csv_filename, chunksize=CHUNKSIZE)
@@ -226,7 +226,7 @@ class custom_suumo_scrape_1(luigi.Task):
         			write_index_chunk_completed(index_chunk_completed, pickle_filename)
         		else:
         			logger.debug("Skipping chunk {0}".format(index))
-
+        '''
 
         def start_scrape_by_chunk_list(in_list, out_csv_filename, scraping_function):
         	def _list_to_chunks(in_list, n):
