@@ -430,7 +430,7 @@ class custom_suumo_scrape_1(luigi.Task):
         ##### Start of execution #####
         content_link_file = '../data/summolinks.xlsx'
         areas = ['Tokyo_23']
-        output_name = ctx['sysRunFolder'] / 'suumo_links.csv'
+        output_name = Path(str(ctx['sysRunFolder'])) / 'suumo_links.csv'
         # First read in the link list of all the cities
         logger.info("Generating list of links to scrape")
         fulllink = get_content_page_urls(content_link_file, areas)
@@ -475,5 +475,5 @@ class custom_suumo_scrape_end(luigi.Task):
             foldername = str(ctx[f])
             if not os.path.exists(foldername):
                 os.makedirs(os.path.join(foldername))
-    
+
         return luigi.LocalTarget(ctx['sysRunFolder'] + '/ended.mrk')
