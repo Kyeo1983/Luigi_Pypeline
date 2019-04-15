@@ -153,9 +153,7 @@ class custom_suumo_scrape_1(luigi.Task):
             # Start scraping
             with ThreadPool(NUM_THREADS) as p:
                 wrapped_list_results = list(
-                    # tqdm(
-                    p.imap(_scrape_map_function, in_list), desc="Pages in Chunk", total=len(in_list), leave=False, unit="pg")
-                    #)
+                    tqdm(p.imap(_scrape_map_function, in_list), desc="Pages in Chunk", total=len(in_list), leave=False, unit="pg"))
                 try:
                     pool_result.extend([item for sublist in wrapped_list_results for item in sublist])
                 except:
