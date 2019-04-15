@@ -245,7 +245,9 @@ class custom_suumo_scrape_1(luigi.Task):
                     write_index_chunk_completed(index_chunk_completed, pickle_filename)
                     if (index_chunk_completed % 1000 == 0):
                         emailconf = email()
-                        subprocess.call('echo "Indexed {}" | mail -s "Job Update: {}" {} -aFrom:{}\<{}\>'.format(index_chunk_completed, ctx['sysJobName'], emailconf.receiver, emailconf.sendername, emailconf.sender), shell=True)
+                        cmd = 'echo "Indexed {}" | s-nail -s "Job Update: {} indexed {}" -r "{}" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth=login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'.format(index_chunk_completed, ctx['sysJobName'], index_chunk_completed, emailconf.sender, smtpconf.host, smtpconf.port, smtpconf.username, smtpconf.password, emailconf.receiver)
+                        subprocess.call(cmd, shell=True)
+
 
                 else:
                     logger.debug("Skipping chunk {0}".format(index))
