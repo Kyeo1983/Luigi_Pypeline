@@ -2,7 +2,7 @@
 init/configure.sh
 
 # Personal files
-data/*.*
+#data/*.*
 temp/*.*
 
 # Dynamically generated files
