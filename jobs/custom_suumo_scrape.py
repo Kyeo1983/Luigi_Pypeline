@@ -238,7 +238,7 @@ class custom_suumo_scrape_1(luigi.Task):
             logger.info("Saving to pickle {}".format(pickle_filename))
             index_chunk_completed = get_index_chunk_completed(pickle_filename)
 
-            for index, list_chunk in enumerate(list_chunks, start=0)
+            for index, list_chunk in enumerate(list_chunks, start=0):
             #tqdm(enumerate(list_chunks, start=0), desc="Total", total=total_chunks, unit="chunk"):
                 if (index > index_chunk_completed):
                     logger.info("Scraping chunk {0}".format(index))
