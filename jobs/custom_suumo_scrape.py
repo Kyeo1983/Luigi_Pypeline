@@ -201,7 +201,7 @@ class Suumo_Scraper:
             in_chunks = pd.read_csv(in_csv_filename, chunksize=CHUNKSIZE)
             total_chunks = math.ceil(sum(1 for row in open(in_csv_filename, "r")) / CHUNKSIZE)
 
-            pickle_filename = out_csv_filename + ".chunks.pkl"
+            pickle_filename = str(out_csv_filename) + ".chunks.pkl"
             index_chunk_completed = get_index_chunk_completed(pickle_filename)
 
             for index, in_df in tqdm(enumerate(in_chunks, start=0), desc="Total", total=total_chunks, unit="chunk"):
@@ -211,6 +211,13 @@ class Suumo_Scraper:
 
                     index_chunk_completed += 1
                     write_index_chunk_completed(index_chunk_completed, pickle_filename)
+                    if (index_chunk_completed % 10 == 0):
+                        logger.info('Scrape completed {}'.format(index_chunk_completed))
+                    if (index_chunk_completed % 20 == 0):
+                        emailconf = email()
+                        smtpconf = smtp()
+                        cmd = 'echo "Indexed {}" | s-nail -s "Job Update: {} indexed {}" -r "{}" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth=login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'.format(index_chunk_completed, ctx['sysJobName'], index_chunk_completed, emailconf.sender, smtpconf.host, smtpconf.port, smtpconf.username, smtpconf.password, emailconf.receiver)
+                        subprocess.call(cmd, shell=True)
                 else:
                     logger.debug("Skipping chunk {0}".format(index))
 
@@ -418,8 +425,8 @@ class Suumo_Scraper:
 
         ##### Start of execution #####
         content_link_file = Path('../data/suumolinks.xlsx')
-        areas = [area]
-        output_name = Path(str(ctx['sysRunFolder'])) / '{}.csv'.format(area).lower()
+        areas = [in_area]
+        output_name = Path(str(ctx['sysRunFolder'])) / '{}.csv'.format(in_area).lower()
         logger.info('Output CSV at {}'.format(output_name))
         # First read in the link list of all the cities
         logger.info("Generating list of links to scrape")
@@ -434,7 +441,7 @@ class Suumo_Scraper:
         else:
             # Stage 2: scraping each prop link
             detail_input_name = output_name
-            detail_output_name = Path(str(ctx['sysRunFolder'])) / '{}_detail.csv'.format(area).lower()
+            detail_output_name = Path(str(ctx['sysRunFolder'])) / '{}_detail.csv'.format(in_area).lower()
             start_scrape_by_chunk_csv(detail_input_name, detail_output_name, scrape_row_content)
             ##### End of stage 2 execution #####
 ########################################
