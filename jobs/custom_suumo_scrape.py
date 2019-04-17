@@ -486,7 +486,7 @@ class custom_suumo_scrape_1(luigi.Task):
 
 
 
-class custom_suumo_scrape_1(luigi.Task):
+class custom_suumo_scrape_2(luigi.Task):
     def requires(self):
         return custom_suumo_scrape_1()
 
