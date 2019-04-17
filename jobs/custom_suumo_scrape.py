@@ -495,10 +495,10 @@ class custom_suumo_scrape_2(luigi.Task):
         emailconf = email()
         smtpconf = smtp()
         for area in EXECUTION_AREAS:
-            cmd = 'echo "Indexed" | s-nail -s "Job Update: {} ({}) started Stage 1" -r "{}" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth=login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'.format(ctx['sysJobName'], area, emailconf.sender, smtpconf.host, smtpconf.port, smtpconf.username, smtpconf.password, emailconf.receiver)
+            cmd = 'echo "Indexed" | s-nail -s "Job Update: {} ({}) started Stage 2" -r "{}" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth=login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'.format(ctx['sysJobName'], area, emailconf.sender, smtpconf.host, smtpconf.port, smtpconf.username, smtpconf.password, emailconf.receiver)
             subprocess.call(cmd, shell=True)
             suumo.run(2, area)
-            cmd = 'echo "Indexed" | s-nail -s "Job Update: {} ({}) completed Stage 1" -r "{}" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth=login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'.format(ctx['sysJobName'], area, emailconf.sender, smtpconf.host, smtpconf.port, smtpconf.username, smtpconf.password, emailconf.receiver)
+            cmd = 'echo "Indexed" | s-nail -s "Job Update: {} ({}) completed Stage 2" -r "{}" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth=login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'.format(ctx['sysJobName'], area, emailconf.sender, smtpconf.host, smtpconf.port, smtpconf.username, smtpconf.password, emailconf.receiver)
             subprocess.call(cmd, shell=True)
         with open(self.output().path, 'w') as out:
             out.write('done')
