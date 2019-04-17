@@ -46,23 +46,13 @@ class smtp(luigi.Config):
     port = luigi.Parameter()
 
 
-class custom_suumo_scrape_start(luigi.Task):
-    def run(self):
-        ctx['sysStatus'] = 'running'
-        ctx['sysTempFolder'] = ctx['sysRunFolder']
-
-        with open(self.output().path, 'w') as out:
-            out.write('started successfully')
-
-    def output(self):
-        return luigi.LocalTarget(str(ctx['sysFolder']) + '/run/started.mrk')
-
-
-class custom_suumo_scrape_1(luigi.Task):
-    def requires(self):
-        return custom_suumo_scrape_start()
-
-    def run(self):
+#############################################
+# Suumo logic
+#############################################
+VALID_AREAS = [ 'Tokyo_23','Tokyo_50','Kanagawa_Yokohama','Kanagawa_Kawasaki', 'Kanagawa_Sagamihara','Kanagawa_others','Saitama_city','Saitama_others','Chiba_city','Chiba_others','Osaka_city','Osaka_others','Nagoya','Fukuoka']
+EXECUTION_AREAS = VALID_AREAS
+class Suumo_Scraper:
+    def run(self, in_stageNum, in_area):
         # [MODIFY IF NEEDED] #######
         ########## GLOBAL PARAMETERS
         # Number of concurrent scraping threads to use in the pool
@@ -205,7 +195,7 @@ class custom_suumo_scrape_1(luigi.Task):
             logger.info("Last stopped at chunk index {0}".format(index_chunk_completed))
             return index_chunk_completed
 
-        '''
+
         def start_scrape_by_chunk_csv(in_csv_filename, out_csv_filename, scraping_function):
             logger.info("Reading CSV")
             in_chunks = pd.read_csv(in_csv_filename, chunksize=CHUNKSIZE)
@@ -223,7 +213,7 @@ class custom_suumo_scrape_1(luigi.Task):
                     write_index_chunk_completed(index_chunk_completed, pickle_filename)
                 else:
                     logger.debug("Skipping chunk {0}".format(index))
-        '''
+
 
         def start_scrape_by_chunk_list(in_list, out_csv_filename, scraping_function):
             def _list_to_chunks(in_list, n):
@@ -245,9 +235,9 @@ class custom_suumo_scrape_1(luigi.Task):
                     _scrape_chunk(list_chunk, index, out_csv_filename, scraping_function)
                     index_chunk_completed += 1
                     write_index_chunk_completed(index_chunk_completed, pickle_filename)
-                    if (index_chunk_completed % 100 == 0):
+                    if (index_chunk_completed % 10 == 0):
                         logger.info('Scrape completed {}'.format(index_chunk_completed))
-                    if (index_chunk_completed % 1000 == 0):
+                    if (index_chunk_completed % 20 == 0):
                         emailconf = email()
                         smtpconf = smtp()
                         cmd = 'echo "Indexed {}" | s-nail -s "Job Update: {} indexed {}" -r "{}" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth=login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'.format(index_chunk_completed, ctx['sysJobName'], index_chunk_completed, emailconf.sender, smtpconf.host, smtpconf.port, smtpconf.username, smtpconf.password, emailconf.receiver)
@@ -428,19 +418,60 @@ class custom_suumo_scrape_1(luigi.Task):
 
         ##### Start of execution #####
         content_link_file = Path('../data/suumolinks.xlsx')
-        areas = ['Tokyo_23']
-        output_name = Path(str(ctx['sysRunFolder'])) / 'suumo_links.csv'
+        areas = [area]
+        output_name = Path(str(ctx['sysRunFolder'])) / '{}.csv'.format(area).lower()
         logger.info('Output CSV at {}'.format(output_name))
         # First read in the link list of all the cities
         logger.info("Generating list of links to scrape")
-        fulllink = get_content_page_urls(content_link_file, areas)
-        logger.info("{0} links to scrape".format(len(fulllink)))
-        logger.info ("Beginning scraping")
-        start_scrape_by_chunk_list(fulllink, output_name, scrape_row_for_prop_links)
-        logger.info("Scraping complete")
-        ##### End of execution #####
+        if (in_stageNum == 1):
+            fulllink = get_content_page_urls(content_link_file, areas)
+            logger.info("{0} links to scrape".format(len(fulllink)))
+            logger.info ("Beginning scraping")
+            start_scrape_by_chunk_list(fulllink, output_name, scrape_row_for_prop_links)
+            logger.info("Scraping complete")
+            ##### End of stage 1 execution #####
+
+        else:
+            # Stage 2: scraping each prop link
+            detail_input_name = output_name
+            detail_output_name = Path(str(ctx['sysRunFolder'])) / '{}_detail.csv'.format(area).lower()
+            start_scrape_by_chunk_csv(detail_input_name, detail_output_name, scrape_row_content)
+            ##### End of stage 2 execution #####
+########################################
+# End of Suumo class
+########################################
 
 
+
+########################################
+# START LUIGI PIPELINE
+########################################
+class custom_suumo_scrape_start(luigi.Task):
+    def run(self):
+        ctx['sysStatus'] = 'running'
+        ctx['sysTempFolder'] = ctx['sysRunFolder']
+        with open(self.output().path, 'w') as out:
+            out.write('started successfully')
+
+    def output(self):
+        return luigi.LocalTarget(str(ctx['sysFolder']) + '/run/started.mrk')
+
+
+
+class custom_suumo_scrape_1(luigi.Task):
+    def requires(self):
+        return custom_suumo_scrape_start()
+
+    def run(self):
+        suumo = Suumo_Scraper()
+        emailconf = email()
+        smtpconf = smtp()
+        for area in EXECUTION_AREAS:
+            cmd = 'echo "Indexed" | s-nail -s "Job Update: {} ({}) started Stage 1" -r "{}" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth=login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'.format(ctx['sysJobName'], area, emailconf.sender, smtpconf.host, smtpconf.port, smtpconf.username, smtpconf.password, emailconf.receiver)
+            subprocess.call(cmd, shell=True)
+            suumo.run(1, area)
+            cmd = 'echo "Indexed" | s-nail -s "Job Update: {} ({}) completed Stage 1" -r "{}" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth=login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'.format(ctx['sysJobName'], area, emailconf.sender, smtpconf.host, smtpconf.port, smtpconf.username, smtpconf.password, emailconf.receiver)
+            subprocess.call(cmd, shell=True)
         with open(self.output().path, 'w') as out:
             out.write('done')
     def output(self):
@@ -448,9 +479,29 @@ class custom_suumo_scrape_1(luigi.Task):
 
 
 
+class custom_suumo_scrape_1(luigi.Task):
+    def requires(self):
+        return custom_suumo_scrape_1()
+
+    def run(self):
+        suumo = Suumo_Scraper()
+        emailconf = email()
+        smtpconf = smtp()
+        for area in EXECUTION_AREAS:
+            cmd = 'echo "Indexed" | s-nail -s "Job Update: {} ({}) started Stage 1" -r "{}" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth=login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'.format(ctx['sysJobName'], area, emailconf.sender, smtpconf.host, smtpconf.port, smtpconf.username, smtpconf.password, emailconf.receiver)
+            subprocess.call(cmd, shell=True)
+            suumo.run(2, area)
+            cmd = 'echo "Indexed" | s-nail -s "Job Update: {} ({}) completed Stage 1" -r "{}" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth=login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'.format(ctx['sysJobName'], area, emailconf.sender, smtpconf.host, smtpconf.port, smtpconf.username, smtpconf.password, emailconf.receiver)
+            subprocess.call(cmd, shell=True)
+        with open(self.output().path, 'w') as out:
+            out.write('done')
+    def output(self):
+        return luigi.LocalTarget(str(ctx['sysFolder']) + '/run/2.mrk')
+
+
 class custom_suumo_scrape_end(luigi.Task):
     def requires(self):
-        return[custom_suumo_scrape_1()]
+        return[custom_suumo_scrape_2()]
 
     def run(self):
         foldername = str(ctx['sysFolder'])
