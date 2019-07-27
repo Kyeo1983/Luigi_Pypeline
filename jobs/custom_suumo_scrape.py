@@ -50,7 +50,7 @@ class smtp(luigi.Config):
 # Suumo logic
 #############################################
 VALID_AREAS = [ 'Tokyo_23','Tokyo_50','Kanagawa_Yokohama','Kanagawa_Kawasaki', 'Kanagawa_Sagamihara','Kanagawa_others','Saitama_city','Saitama_others','Chiba_city','Chiba_others','Osaka_city','Osaka_others','Nagoya','Fukuoka']
-EXECUTION_AREAS = VALID_AREAS
+EXECUTION_AREAS = ['Chiba_others','Kanagawa_Yokohama','Kanagawa_Kawasaki','Saitama_others','Tokyo_50','Tokyo_23']
 class Suumo_Scraper:
     def run(self, in_stageNum, in_area):
         # [MODIFY IF NEEDED] #######
@@ -244,7 +244,7 @@ class Suumo_Scraper:
                     write_index_chunk_completed(index_chunk_completed, pickle_filename)
                     if (index_chunk_completed % 10 == 0):
                         logger.info('Scrape completed {}'.format(index_chunk_completed))
-                    if (index_chunk_completed % 20 == 0):
+                    if (index_chunk_completed % 100 == 0):
                         emailconf = email()
                         smtpconf = smtp()
                         cmd = 'echo "Indexed {}" | s-nail -s "Job Update: {} indexed {}" -r "{}" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth=login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'.format(index_chunk_completed, ctx['sysJobName'], index_chunk_completed, emailconf.sender, smtpconf.host, smtpconf.port, smtpconf.username, smtpconf.password, emailconf.receiver)
@@ -475,9 +475,11 @@ class custom_suumo_scrape_1(luigi.Task):
         smtpconf = smtp()
         for area in EXECUTION_AREAS:
             cmd = 'echo "Indexed" | s-nail -s "Job Update: {} ({}) started Stage 1" -r "{}" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth=login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'.format(ctx['sysJobName'], area, emailconf.sender, smtpconf.host, smtpconf.port, smtpconf.username, smtpconf.password, emailconf.receiver)
+            cmd = 'ls'
             subprocess.call(cmd, shell=True)
             suumo.run(1, area)
             cmd = 'echo "Indexed" | s-nail -s "Job Update: {} ({}) completed Stage 1" -r "{}" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth=login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'.format(ctx['sysJobName'], area, emailconf.sender, smtpconf.host, smtpconf.port, smtpconf.username, smtpconf.password, emailconf.receiver)
+            cmd = 'ls'
             subprocess.call(cmd, shell=True)
         with open(self.output().path, 'w') as out:
             out.write('done')
