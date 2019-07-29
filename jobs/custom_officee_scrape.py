@@ -250,7 +250,7 @@ class custom_officee_scrape_4(luigi.Task):
             soup = BeautifulSoup(r.text, "html.parser")
 
             # Scrape Date and Time
-            now = datetime.datetime.now()
+            now = datetime.now()
             date = now.strftime('%d/%m/%Y %H:%M')
 
             # Property Name
