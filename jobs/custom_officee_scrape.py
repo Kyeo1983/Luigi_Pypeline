@@ -100,7 +100,7 @@ class custom_officee_scrape_2(luigi.Task):
 
     def run(self):
         df = ctx['Areadf']
-        logger.info('# of Areas to scrape is {0]'.format(len(df['Link'])))
+        logger.info('# of Areas to scrape is {0}'.format(len(df['Link'])))
 
         # Concat the Links
         df['Link'] = "https://officee.jp" + df['Link']
