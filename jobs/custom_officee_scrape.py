@@ -57,14 +57,14 @@ def scrape(url, attemptlimit, waittime):
     while attempts < attemptlimit:
         try:
             r = requests.get(url)
-            break
+            return r
         except:
             logger.warning('Connecion Error: {0}'.format(str(sys.exc_info())))
             logger.warning('Number of Attempts: {0}'.format(str(attempts)))
             logger.warning('Sleep for 30 sec')
             attempts += 1
             time.sleep(waittime)
-        return r
+    return None
 
 
 class custom_officee_scrape_1(luigi.Task):
