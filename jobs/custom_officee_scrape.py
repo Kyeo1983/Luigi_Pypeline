@@ -457,7 +457,7 @@ class custom_officee_scrape_5(luigi.Task):
         translation.to_csv(self.output().path)
 
     def output(self):
-        return luigi.LocalTarget(str(ctx['sysFolder']) + '/run/{0} Officee Scrape (Final).csv'.format(datetime.datetime.now().strftime('%Y-%m-%d')))
+        return luigi.LocalTarget(str(ctx['sysFolder']) + '/run/{0} Officee Scrape (Final).csv'.format(datetime.now().strftime('%Y-%m-%d')))
 
 
 class custom_officee_scrape_end(luigi.Task):
