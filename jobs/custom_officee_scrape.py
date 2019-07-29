@@ -78,7 +78,7 @@ class custom_officee_scrape_1(luigi.Task):
         r = scrape(url, 20, 30)
 
         # Parse result into HTML using BS
-        soup = BeautifulSoup(r.text, "html.parse")
+        soup = BeautifulSoup(r.text, "html.parser")
 
         cityLinks = soup.select("a[href]")
         subCity = cityLinks[39:153]
