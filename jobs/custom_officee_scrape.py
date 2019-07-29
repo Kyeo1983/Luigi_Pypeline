@@ -161,7 +161,7 @@ class custom_officee_scrape_2(luigi.Task):
         # Save them into Excel
         # CSV cannot recognize Japanese Words whereas Excel can
         ctx['office_links_df'] = bigPicture
-        bigPicture.to_csv(self.output().path')
+        bigPicture.to_csv(self.output().path)
         logger.info('Scrape at Office Level is completed')
     def output(self):
         return luigi.LocalTarget(str(ctx['sysFolder']) + '/run/Office Links.csv')
