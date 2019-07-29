@@ -375,8 +375,8 @@ class custom_officee_scrape_4(luigi.Task):
                 "Office Name": OfficeName, "Rental Link": RentalLinks[x],
                 "Latitude": Lat, "Longtitude": Lng,
                 "Neighboring Area/Station JP": values1, "Scrapped Date": date,
-                "Review Description": reviewDesc, "Review Rating": reviewRating}, index=[0]
-            })
+                "Review Description": reviewDesc, "Review Rating": reviewRating
+            }, index=[0])
 
             # Join rest of the information together
             def concatsmallpic(smallpic, df):
