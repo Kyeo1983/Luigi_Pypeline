@@ -241,9 +241,9 @@ class custom_officee_scrape_4(luigi.Task):
 
     def run(self):
         logger.info('Initialise STEP 4: Scrape Rental Details for Rental Links')
-        RentalLinks = "https://officee.jp" + df.loc[:, "Rental Link"]
-
         df = ctx['rental_links_df']
+
+        RentalLinks = "https://officee.jp" + df.loc[:, "Rental Link"]
         logger.info('There are {0} links to be scrapped'.format(str(len(RentalLinks))))
         for x in range(len(RentalLinks)):
             r = scrape(RentalLinks[x], 20, 30)
