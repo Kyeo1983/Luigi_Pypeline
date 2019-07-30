@@ -420,18 +420,15 @@ class custom_officee_scrape_5(luigi.Task):
         client = translate.TranslationServiceClient()
         translation = ctx['raw_scrape_df']
 
-        z = True
-        while(z and attempts < 8):
+        for i in range(8):
             try:
                 translation.columns = [client.translate(contents=[x], target_language_code="en", source_language_code="ja")['translatedText'] for x in translation.columns]
-                z = False
+                break
             except:
-                attempts += 1
                 logger.warning('Translation failed. Warning: {0}'.format(str(sys.exc_info())))
-                logger.info('Attempt: {0}'.format(str(attempts)))
+                logger.info('Attempt: {0}'.format(str(i)))
                 logger.info('Rest for 60 seconds and retry')
                 time.sleep(60)
-                z = True
         logger.info('Translation completed successfully')
 
         ##### Cleaning and Restructuring of Data #####
