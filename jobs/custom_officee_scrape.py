@@ -418,7 +418,10 @@ class custom_officee_scrape_5(luigi.Task):
     def run(self):
         logger.info('Now moving on to translate columns')
         client = translate.TranslationServiceClient()
-        translation = ctx['raw_scrape_df']
+        if 'raw_scrape_df' not in ctx:
+            translation = pd.read_csv(str(ctx['sysFolder']) + '/run/Raw Scrape.csv')
+        else:
+            translation = ctx['raw_scrape_df']
 
         for i in range(8):
             try:
