@@ -425,7 +425,7 @@ class custom_officee_scrape_5(luigi.Task):
 
         for i in range(8):
             try:
-                translation.columns = [client.translate(contents=[x], target_language_code="en", source_language_code="ja")['translatedText'] for x in translation.columns]
+                translation.columns = [client.translate_text(contents=[x], target_language_code="en", source_language_code="ja")['translatedText'] for x in translation.columns]
                 break
             except:
                 logger.warning('Translation failed. Warning: {0}'.format(str(sys.exc_info())))
