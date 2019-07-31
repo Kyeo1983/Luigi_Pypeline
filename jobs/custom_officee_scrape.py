@@ -13,6 +13,7 @@ sys.path.append('../configs')
 from configs.appconf import conf
 from google.cloud import translate_v3beta1 as translate
 
+project_id = conf["project_id"]
 workingdir = conf["working_dir"]
 ctx = {'sysFolder' : workingdir + '/jobs/jobmarkers/custom_officee_scrape'}
 ctx['sysRunFolder'] = workingdir + '/jobs/jobmarkers/custom_officee_scrape/run'
@@ -419,7 +420,9 @@ class custom_officee_scrape_5(luigi.Task):
 
     def run(self):
         logger.info('Now moving on to translate columns')
+        location = 'global'
         client = translate.TranslationServiceClient()
+        parent = client.location_path(project_id, location)
         if 'raw_scrape_df' not in ctx:
             translation = pd.read_csv(str(ctx['sysFolder']) + '/run/Raw Scrape.csv')
         else:
@@ -427,7 +430,7 @@ class custom_officee_scrape_5(luigi.Task):
 
         for i in range(8):
             try:
-                translation.columns = [client.translate_text(contents=[x], target_language_code="en", source_language_code="ja")['translatedText'] for x in translation.columns]
+                translation.columns = [client.translate_text(parent=parent, contents=[x], target_language_code="en", source_language_code="ja")['translatedText'] for x in translation.columns]
                 break
             except:
                 logger.warning('Translation failed. Warning: {0}'.format(str(sys.exc_info())))
