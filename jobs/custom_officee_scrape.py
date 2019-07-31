@@ -9,14 +9,16 @@ from pathlib import Path
 import pandas as pd
 from bs4 import BeautifulSoup
 sys.path.append('../utils')
+sys.path.append('../configs')
+from configs.appconf import conf
 from google.cloud import translate_v3beta1 as translate
 
-
-ctx = {'sysFolder' : '/home/kyeoses/pypeline/jobs/jobmarkers/custom_officee_scrape'}
-ctx['sysRunFolder'] = '/home/kyeoses/pypeline/jobs/jobmarkers/custom_officee_scrape/run'
-ctx['sysSaveFolder'] = '/home/kyeoses/pypeline/jobs/jobmarkers/custom_officee_scrape/run/save'
+workingdir = conf["working_dir"]
+ctx = {'sysFolder' : workingdir + '/jobs/jobmarkers/custom_officee_scrape'}
+ctx['sysRunFolder'] = workingdir + '/jobs/jobmarkers/custom_officee_scrape/run'
+ctx['sysSaveFolder'] = workingdir + '/jobs/jobmarkers/custom_officee_scrape/run/save'
 ctx['sysJobName'] = 'custom_officee_scrape'
-ctx['sysLogConfig'] = '/home/kyeoses/pypeline/luigi_central_scheduler/luigi_log.cfg'
+ctx['sysLogConfig'] = workingdir + '/luigi_central_scheduler/luigi_log.cfg'
 logging.config.fileConfig(ctx['sysLogConfig'])
 logger = logging.getLogger('luigi-interface')
 
