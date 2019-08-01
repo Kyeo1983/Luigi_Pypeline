@@ -10,7 +10,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 sys.path.append('../utils')
 sys.path.append('../configs')
-from configs.appconf import conf
+from appconf import conf
 from google.cloud import translate_v3beta1 as translate
 
 project_id = conf["project_id"]
