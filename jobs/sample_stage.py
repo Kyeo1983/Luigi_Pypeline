@@ -16,7 +16,7 @@ workingdir = conf["working_dir"]
 ctx = {'sysFolder' : workingdir + '/jobs/jobmarkers/sample_stage'}
 ctx['sysRunFolder'] = workingdir + '/jobs/jobmarkers/sample_stage/run'
 ctx['sysSaveFolder'] = workingdir + '/jobs/jobmarkers/sample_stage/run/save'
-ctx['sysJobName'] = 'custom_officee_scrape'
+ctx['sysJobName'] = 'sample_stage'
 ctx['sysLogConfig'] = workingdir + '/luigi_central_scheduler/luigi_log.cfg'
 logging.config.fileConfig(ctx['sysLogConfig'])
 logger = logging.getLogger('luigi-interface')
