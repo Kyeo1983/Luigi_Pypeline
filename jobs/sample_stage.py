@@ -73,7 +73,7 @@ class sample_stage_2(luigi.Task):
 
     def run(self):
         # proc = subprocess.run('sleep 30 && cp kkkkk', shell=True)
-        proc = subprocess.run('sleep 30', shell=True)
+        proc = subprocess.run('sleep 10', shell=True)
         proc.check_returncode()
         with open(self.output().path, 'w') as out:
             out.write(str(proc.returncode))
