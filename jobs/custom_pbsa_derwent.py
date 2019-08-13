@@ -160,7 +160,7 @@ class custom_pbsa_derwent_1(luigi.Task):
 
 class custom_pbsa_derwent_end(luigi.Task):
     def requires(self):
-        return[custom_pbsa_derwent_2()]
+        return[custom_pbsa_derwent_1()]
 
     def run(self):
         foldername = str(ctx['sysFolder'])
