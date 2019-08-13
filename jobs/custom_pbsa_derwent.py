@@ -83,19 +83,21 @@ class custom_pbsa_derwent_1(luigi.Task):
         writer = csv.writer(f)
         # columns of attributes to collect
 
-        logger.info('Writing to file now')
+        logger.info('Writing column headers to file now')
         writer.writerow(("city url", "property url", "property address", "latitude", "longitude", "features", "room type", "start date", "rent per week", "total cost","availability"))   
 
     def output(self):
         return luigi.LocalTarget(str(ctx['sysFolder']) + '/run/derwent_output.csv')
 
 
-class custom_pbsa_derwent_end(luigi.Task):
+class custom_pbsa_derwent_2(luigi.Task):
     def requires(self):
         return custom_pbsa_derwent_1()
     def run(self):
         # extract list of cities from the home page
+        logger.info('Scraping the home page of derwent')
         home = getSoup("https://www.derwentstudents.com", 20, 30)
+        logger.info('Home page successfully scraped')
         time.sleep(3)
         sub_menu = home.find("ul", class_ = 'sub-menu').find_all("li")
         city_urls = []
@@ -160,3 +162,34 @@ class custom_pbsa_derwent_end(luigi.Task):
 
     def output(self):
         return luigi.LocalTarget(str(ctx['sysFolder']) + '/run/derwent_output.csv')
+
+
+class custom_pbsa_derwent_end(luigi.Task):
+    def requires(self):
+        return[custom_pbsa_derwent_2()]
+
+    def run(self):
+        foldername = str(ctx['sysFolder'])
+        if os.path.exists(foldername):
+            shutil.copytree(foldername, ctx['sysEndFolder'])
+
+        emailconf = email()
+        smtpconf = smtp()
+        cmd = 'echo "Success" | s-nail -s "Job Success: {}" -r "{}" -S smtp="{}:{}" -S smtp-use-starttls -S smtp-auth=login -S smtp-auth-user="{}" -S smtp-auth-password="{}" -S ssl-verify=ignore {}'.format(ctx['sysJobName'], emailconf.sender, smtpconf.host, smtpconf.port, smtpconf.username, smtpconf.password, emailconf.receiver)
+        subprocess.call(cmd, shell=True)
+
+
+        with open(self.output().path, 'w') as out:
+            out.write('ended successfully')
+
+    def output(self):
+        global ctx
+
+        #Make directories if not exists
+        ctx['sysEndFolder'] = os.path.join(ctx['sysRunFolder'] + '_' + datetime.now().strftime('%Y%m%d%H%M%S'))
+        for f in ['sysFolder', 'sysRunFolder']:
+            foldername = str(ctx[f])
+            if not os.path.exists(foldername):
+                os.makedirs(os.path.join(foldername))
+
+        return luigi.LocalTarget(ctx['sysRunFolder'] + '/ended.mrk')
