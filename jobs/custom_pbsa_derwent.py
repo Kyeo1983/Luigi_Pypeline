@@ -43,6 +43,7 @@ class custom_pbsa_derwent_start(luigi.Task):
     def run(self):
         ctx['sysStatus'] = 'running'
         ctx['sysTempFolder'] = ctx['sysRunFolder']
+        ctx['writer'] = None
         with open(self.output().path, 'w') as out:
             out.write('started successfully')
 
@@ -82,7 +83,7 @@ class custom_pbsa_derwent_1(luigi.Task):
         f = open(filename, "w", newline='')
         writer = csv.writer(f)
         # columns of attributes to collect
-
+        ctx['writer'] = writer
         logger.info('Writing column headers to file now')
         writer.writerow(("city url", "property url", "property address", "latitude", "longitude", "features", "room type", "start date", "rent per week", "total cost","availability"))   
 
@@ -135,6 +136,7 @@ class custom_pbsa_derwent_2(luigi.Task):
                 rooms_soup = property_soup.find_all("div", class_ = "room-item")
                 # extract room type, start date, rent per week, total cost into a list(ordered)
                 content = []
+                writer = ctx['writer']
                 for i in range(len(rooms_soup)):
                     try:
 	                    price_soups = rooms_soup[i].find_all("div", class_ = "room-strip")
@@ -166,7 +168,7 @@ class custom_pbsa_derwent_2(luigi.Task):
 
 class custom_pbsa_derwent_end(luigi.Task):
     def requires(self):
-        return[custom_pbsa_derwent_2()]
+        return[custom_pbsa_derwent_1()]
 
     def run(self):
         foldername = str(ctx['sysFolder'])
