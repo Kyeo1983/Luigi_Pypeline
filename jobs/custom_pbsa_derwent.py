@@ -79,22 +79,14 @@ class custom_pbsa_derwent_1(luigi.Task):
     def run(self):
         logger.info('Initiating Scrape for Derwent')
         logger.info('Step 1: Initialise output file')
-        filename = 'derwent_output.csv'
-        f = open(filename, "w", newline='')
+        f = open(self.output().path, "w", newline='')
         writer = csv.writer(f)
-        # columns of attributes to collect
         ctx['writer'] = writer
         logger.info('Writing column headers to file now')
+        # columns of attributes to collect
         writer.writerow(("city url", "property url", "property address", "latitude", "longitude", "features", "room type", "start date", "rent per week", "total cost","availability"))   
 
-    def output(self):
-        return luigi.LocalTarget(str(ctx['sysFolder']) + '/run/derwent_output.csv')
 
-
-class custom_pbsa_derwent_2(luigi.Task):
-    def requires(self):
-        return custom_pbsa_derwent_1()
-    def run(self):
         # extract list of cities from the home page
         logger.info('Scraping the home page of derwent')
         home = getSoup("https://www.derwentstudents.com", 20, 30)
@@ -113,6 +105,7 @@ class custom_pbsa_derwent_2(luigi.Task):
         for city_url in city_urls:
             logger.info('scraping the following city ' + city_url)
             city_soup = getSoup(city_url, 10, 30)
+            logger.info('the soup of city ' + city_url + ' has been obtained')
             listed_properties = city_soup.find_all("div", class_ = 'location-title')
             list_of_property_urls = []
             # iterate through property
@@ -132,7 +125,6 @@ class custom_pbsa_derwent_2(luigi.Task):
                 feature_list = []
                 for feature in features_soup:
                     feature_list.append(clean(feature.text))
-        
                 rooms_soup = property_soup.find_all("div", class_ = "room-item")
                 # extract room type, start date, rent per week, total cost into a list(ordered)
                 content = []
