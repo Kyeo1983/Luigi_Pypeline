@@ -79,22 +79,14 @@ class custom_pbsa_derwent_1(luigi.Task):
     def run(self):
         logger.info('Initiating Scrape for Derwent')
         logger.info('Step 1: Initialise output file')
-        filename = 'derwent_output.csv'
-        f = open(filename, "w", newline='')
+        f = open(self.output().path, "w", newline='')
         writer = csv.writer(f)
         ctx['writer'] = writer
         logger.info('Writing column headers to file now')
         # columns of attributes to collect
         writer.writerow(("city url", "property url", "property address", "latitude", "longitude", "features", "room type", "start date", "rent per week", "total cost","availability"))   
 
-    def output(self):
-        return luigi.LocalTarget(str(ctx['sysFolder']) + '/run/derwent_output.csv')
 
-
-class custom_pbsa_derwent_2(luigi.Task):
-    def requires(self):
-        return custom_pbsa_derwent_1()
-    def run(self):
         # extract list of cities from the home page
         logger.info('Scraping the home page of derwent')
         home = getSoup("https://www.derwentstudents.com", 20, 30)
