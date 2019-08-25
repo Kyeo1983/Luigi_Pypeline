@@ -108,18 +108,18 @@ for imports in to_import:
 logger.info('Written all imports for job')
 
 
-# Writing top-level job and config specific data to global param in workflow   
-# 1. Writing Folder to Script
+# Writing top-level job and config specific data to global param in workflow
+# 1. Writing Job Name to Script
+output.write("ctx = {{'sysJobName' : '{}'}}\n".format(job_name))
+# 2. Writing Folder to Script
 sysFolder = OSPath.path(JOB_MARKER_PATH / job_name)
-output.write("ctx = {{'sysFolder' : '{}'}}\n".format(sysFolder))
-# 2. Writing Run Folder to Script
+output.write("ctx['sysFolder'] = '{}'\n".format(sysFolder))
+# 3. Writing Run Folder to Script
 sysRunFolder = OSPath.path(sysFolder / 'run')
 output.write("ctx['sysRunFolder'] = '{}'\n".format(sysRunFolder))
-# 3. Writing Last Saved State Folder to Script
+# 4. Writing Last Saved State Folder to Script
 sysSaveFolder = OSPath.path(sysRunFolder / 'save')
 output.write("ctx['sysSaveFolder'] = '{}'\n".format(sysSaveFolder))
-# 4. Writing Job Name to Script
-output.write("ctx['sysJobName'] = '{}'\n".format(job_name))
 # 5. Writing Logger to Script
 output.write("ctx['sysLogConfig'] = '{}'\n".format(logCfgPath))
 output.write("logging.config.fileConfig(ctx['sysLogConfig'])\n")
