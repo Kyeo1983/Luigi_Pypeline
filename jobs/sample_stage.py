@@ -1,4 +1,4 @@
-import luigi, json, os, sys, time, shutil, subprocess, logging
+import luigi, json, os, stat, sys, time, shutil, subprocess, logging
 import logging.config
 from datetime import datetime
 ####################################
@@ -13,10 +13,10 @@ from appconf import conf
 
 project_id = conf["project_id"]
 workingdir = conf["working_dir"]
-ctx = {'sysFolder' : workingdir + '/jobs/jobmarkers/sample_stage'}
-ctx['sysRunFolder'] = workingdir + '/jobs/jobmarkers/sample_stage/run'
-ctx['sysSaveFolder'] = workingdir + '/jobs/jobmarkers/sample_stage/run/save'
-ctx['sysJobName'] = 'sample_stage'
+ctx = {'sysJobName' : 'sample_stage'}
+ctx['sysFolder'] = workingdir + '/jobs/jobmarkers/' + ctx['sysJobName']
+ctx['sysRunFolder'] = workingdir + '/jobs/jobmarkers/' + ctx['sysJobName'] + '/run'
+ctx['sysSaveFolder'] = workingdir + '/jobs/jobmarkers/' + ctx['sysJobName'] + '/run/save'
 ctx['sysLogConfig'] = workingdir + '/luigi_central_scheduler/luigi_log.cfg'
 logging.config.fileConfig(ctx['sysLogConfig'])
 logger = logging.getLogger('luigi-interface')
@@ -109,6 +109,9 @@ class sample_stage_end(luigi.Task):
         for f in ['sysFolder', 'sysRunFolder']:
             foldername = str(ctx[f])
             if not os.path.exists(foldername):
-                os.makedirs(os.path.join(foldername))
+                p = os.path.join(foldername)
+                os.makedirs(p)
+                cmd = 'chmod -R g+rws {}'.format(p)
+                subprocess.call(cmd, shell=True)
 
         return luigi.LocalTarget(ctx['sysRunFolder'] + '/ended.mrk')
