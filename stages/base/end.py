@@ -36,6 +36,9 @@ class {{job}}_end(luigi.Task):
         for f in ['sysFolder', 'sysRunFolder']:
             foldername = str(ctx[f])
             if not os.path.exists(foldername):
-                os.makedirs(os.path.join(foldername))
+                p = os.path.join(foldername)
+                os.makedirs(p)
+                cmd = 'chmod -R g+rws {}'.format(p)
+                subprocess.call(cmd, shell=True)
 
         return luigi.LocalTarget(ctx['sysRunFolder'] + '/ended.mrk')
