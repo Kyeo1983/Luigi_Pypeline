@@ -25,10 +25,10 @@ from pathlib import Path
 import pandas as pd
 
 
-ctx = {'sysFolder' : '/home/kyeoses/pypeline/jobs/jobmarkers/custom_suumo_scrape'}
-ctx['sysRunFolder'] = '/home/kyeoses/pypeline/jobs/jobmarkers/custom_suumo_scrape/run'
-ctx['sysSaveFolder'] = '/home/kyeoses/pypeline/jobs/jobmarkers/custom_suumo_scrape/run/save'
-ctx['sysJobName'] = 'custom_suumo_scrape'
+ctx = {'sysJobName' : 'custom_suumo_scrape'}
+ctx['sysFolder'] = '/home/kyeoses/pypeline/jobs/jobmarkers/' + ctx['sysJobName']
+ctx['sysRunFolder'] = '/home/kyeoses/pypeline/jobs/jobmarkers/' + ctx['sysJobName'] + '/run'
+ctx['sysSaveFolder'] = '/home/kyeoses/pypeline/jobs/jobmarkers/' + ctx['sysJobName'] + '/run/save'
 ctx['sysLogConfig'] = '/home/kyeoses/pypeline/luigi_central_scheduler/luigi_log.cfg'
 logging.config.fileConfig(ctx['sysLogConfig'])
 logger = logging.getLogger('luigi-interface')
@@ -534,6 +534,9 @@ class custom_suumo_scrape_end(luigi.Task):
         for f in ['sysFolder', 'sysRunFolder']:
             foldername = str(ctx[f])
             if not os.path.exists(foldername):
-                os.makedirs(os.path.join(foldername))
+                p = os.path.join(foldername)
+                os.makedirs(p)
+                cmd = 'chmod -R g+rws {}'.format(p)
+                subprocess.call(cmd, shell=True)
 
         return luigi.LocalTarget(ctx['sysRunFolder'] + '/ended.mrk')
