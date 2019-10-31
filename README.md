@@ -12,8 +12,7 @@ The generated script will reside in _/jobs/_. The script will also contain a glo
 
 Overview
 ----------------------------------
-
-
+<img width="400px" src="https://raw.githubusercontent.com/Kyeo1983/Luigi_Pypeline/master/docs/diagram.jpg"/>
 
 Setup Server
 ==================================
