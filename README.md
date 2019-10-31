@@ -1,3 +1,20 @@
+Extension of [Luigi](https://github.com/spotify/luigi) Supporting Pipeline as Config
+==================================
+This project aims to support end users who has little to no background in programming to build ETL pipelines, and also to support reuse of implemented Luigi Tasks (or stages).
+
+
+How it Works
+----------------------------------
+In this design, the job factory will take in an input JSON that specifies the sequence, dependencies of stages, and also arguments to the stages. It then generates i) a full-fledge Luigi script and ii) a shell script for Luigi job submission. A Stage in this pipeline process corresponds to a Luigi Task. Stage metadata are defined in _/configs/stagesconf.py_, and actual stage codes are in _/stages/_. Stage codes are written in Jinja2 templates. During runtime, these stage codes are pieced together and parameters replaced to deploy a full Luigi script. The benefit to using Jinja2 templates is that it can support dynamic stages where codes are directly provided by the JSON input. The shell script will take care of allocation of run folders for every fresh job run.
+
+The generated script will reside in _/jobs/_. The script will also contain a global variable _ctx_ that contains assigned values for the job, such as temporary folders path and metadata like jobname. Submit the job by executing the accompanying shell script, and results to that run will be stored in _/jobs/jobmarkers/<jobname>/run_<yyyymmddhhmiss>/_.
+
+
+Overview
+----------------------------------
+
+
+
 Setup Server
 ==================================
 
