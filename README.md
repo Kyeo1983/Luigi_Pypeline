@@ -46,6 +46,7 @@ conda create -n pipeline
 source activate pipeline
 
 echo "Installing packages"
+conda install pip
 pip install --upgrade pip
 conda install -y numpy
 conda install -y pandas
@@ -53,6 +54,7 @@ conda install -y luigi
 conda install -y jinja2
 conda install -y requests
 conda install -y sqlalchemy
+pip install google-cloud-translate
 
 echo "Installing (optional) packages"
 pip install -y fake_useragent
