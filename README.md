@@ -55,6 +55,7 @@ conda install -y jinja2
 conda install -y requests
 conda install -y sqlalchemy
 pip install google-cloud-translate
+pip install luigi
 
 echo "Installing (optional) packages"
 pip install -y fake_useragent
