@@ -54,6 +54,7 @@ conda install -y luigi
 conda install -y jinja2
 conda install -y requests
 conda install -y sqlalchemy
+conda install -c anaconda openpyxl
 pip install google-cloud-translate
 pip install luigi
 
